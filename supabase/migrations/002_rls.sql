@@ -21,12 +21,14 @@ drop policy if exists "reservations_select_admin"    on public.reservations;
 drop policy if exists "reservations_update_admin"    on public.reservations;
 drop policy if exists "reservations_delete_admin"    on public.reservations;
 
--- INSERT: 모든 역할(anon, authenticated, 기타) 허용
+-- INSERT: anon + authenticated 모두 허용
+-- (TO public 으로도 가능하지만, 일부 환경에서 {anon} 으로만 저장되는 케이스가
+--  관찰되어 명시적으로 두 역할 모두 지정.)
 create policy "reservations_insert_any"
 on public.reservations
 as permissive
 for insert
-to public
+to anon, authenticated
 with check (true);
 
 -- SELECT: 관리자만

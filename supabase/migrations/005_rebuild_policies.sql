@@ -17,7 +17,7 @@ create policy "reservations_insert_any"
 on public.reservations
 as permissive
 for insert
-to public
+to anon, authenticated
 with check (true);
 
 create policy "reservations_select_admin"
