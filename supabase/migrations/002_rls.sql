@@ -5,12 +5,15 @@ alter table public.reservations enable row level security;
 alter table public.time_slots   enable row level security;
 alter table public.admin_users  enable row level security;
 
--- reservations: 익명은 INSERT
-drop policy if exists "anon insert reservations" on public.reservations;
-create policy "anon insert reservations"
+-- reservations: 누구나 INSERT (anon + authenticated)
+-- 어드민이 로그인된 브라우저에서도 일반 손님이 예약을 만들 수 있어야 하므로
+-- authenticated 역할에도 INSERT를 허용. 단, WITH CHECK 는 true.
+drop policy if exists "anon insert reservations"   on public.reservations;
+drop policy if exists "anyone insert reservations" on public.reservations;
+create policy "anyone insert reservations"
 on public.reservations
 for insert
-to anon
+to anon, authenticated
 with check (true);
 
 -- reservations: 어드민은 모든 작업
