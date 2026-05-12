@@ -1,0 +1,43 @@
+:root {
+  /* Palette — modern Michelin: deep ink, ivory, champagne gold */
+  --ink: #0b0b0c;
+  --ink-soft: #1a1a1c;
+  --ink-2: #2a2a2d;
+  --bone: #f4efe6;
+  --cream: #ede6d6;
+  --paper: #faf7f1;
+  --gold: #b8935a;
+  --gold-soft: #d9c5a0;
+  --gold-deep: #8a6d3f;
+  --muted: #8a8579;
+  --muted-2: #b8b3a8;
+  --line: rgba(184, 147, 90, 0.28);
+  --line-soft: rgba(184, 147, 90, 0.14);
+  --line-ink: rgba(11, 11, 12, 0.12);
+  --danger: #b3493a;
+  --success: #5d7a4f;
+
+  /* Typography */
+  --display: "Cormorant Garamond", "Noto Serif KR", "Apple SD Gothic Neo",
+    serif;
+  --serif-ko: "Noto Serif KR", "Cormorant Garamond", serif;
+  --sans: "Inter", "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-slow: 700ms;
+  --t-med: 420ms;
+  --t-fast: 220ms;
+
+  /* Layout */
+  --container: 1240px;
+  --container-narrow: 880px;
+
+  color-scheme: light;
+  color: var(--ink);
+  background: var(--paper);
+  font: 400 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
