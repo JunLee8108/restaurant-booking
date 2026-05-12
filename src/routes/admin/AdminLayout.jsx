@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import { getSession, onAuthChange, signOut } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabase";
 import "./admin.css";

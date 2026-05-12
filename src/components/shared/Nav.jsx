@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import "./shared.css";
 
 export default function Nav() {
@@ -42,9 +42,9 @@ export default function Nav() {
           <a href="/#visit" onClick={() => setOpen(false)}>
             방문 안내
           </a>
-          <a href="/#reserve" className="nav-cta" onClick={() => setOpen(false)}>
+          <Link to="/reserve" className="nav-cta" onClick={() => setOpen(false)}>
             예약하기
-          </a>
+          </Link>
         </nav>
 
         <button

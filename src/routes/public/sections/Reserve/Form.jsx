@@ -17,7 +17,7 @@ import {
   getNextDays,
   toISO,
 } from "../../../../lib/utils";
-import "./reservation.css";
+import "./reserve.css";
 
 const STEPS = [
   { key: "date", label: "날짜" },
@@ -122,171 +122,141 @@ export default function Reservation() {
 
   if (result?.ok) {
     return (
-      <section id="reserve" className="section reservation">
-        <div className="container narrow">
-          <Reveal>
-            <div className="confirm-card">
-              <div className="confirm-stars">★ ★ ★</div>
-              <div className="eyebrow">예약 접수 완료</div>
-              <h2 className="confirm-title">
-                감사합니다,<br />
-                <span className="italic">{result.payload.customer_name}</span>{" "}
-                님.
-              </h2>
-              <div className="rule center" />
-              <p className="confirm-msg">
-                예약이 접수되었습니다. 확인 메일이 곧 발송되며, 24시간 내
-                담당자가 컨펌 연락을 드립니다.
-              </p>
-              <div className="confirm-summary">
-                <div className="confirm-row">
-                  <span>예약 번호</span>
-                  <strong>{result.code}</strong>
-                </div>
-                <div className="confirm-row">
-                  <span>일시</span>
-                  <strong>
-                    {fmtDate(result.payload.reservation_date)} ·{" "}
-                    {fmtTime(result.payload.reservation_time)}
-                  </strong>
-                </div>
-                <div className="confirm-row">
-                  <span>인원</span>
-                  <strong>{result.payload.party_size}명</strong>
-                </div>
-                <div className="confirm-row">
-                  <span>좌석</span>
-                  <strong>
-                    {
-                      SEATING.find((s) => s.value === result.payload.seating)
-                        ?.label
-                    }
-                  </strong>
-                </div>
-              </div>
-              {result.demo && (
-                <div className="confirm-demo">
-                  데모 모드 — Supabase가 연결되지 않아 예약이 브라우저에 임시
-                  저장되었습니다.
-                </div>
-              )}
-              <button className="btn gold" onClick={restart}>
-                새 예약 만들기
-              </button>
+      <Reveal>
+        <div className="confirm-card">
+          <div className="confirm-stars">★ ★ ★</div>
+          <div className="eyebrow">예약 접수 완료</div>
+          <h2 className="confirm-title">
+            감사합니다,<br />
+            <span className="italic">{result.payload.customer_name}</span> 님.
+          </h2>
+          <div className="rule center" />
+          <p className="confirm-msg">
+            예약이 접수되었습니다. 확인 메일이 곧 발송되며, 24시간 내 담당자가
+            컨펌 연락을 드립니다.
+          </p>
+          <div className="confirm-summary">
+            <div className="confirm-row">
+              <span>예약 번호</span>
+              <strong>{result.code}</strong>
             </div>
-          </Reveal>
+            <div className="confirm-row">
+              <span>일시</span>
+              <strong>
+                {fmtDate(result.payload.reservation_date)} ·{" "}
+                {fmtTime(result.payload.reservation_time)}
+              </strong>
+            </div>
+            <div className="confirm-row">
+              <span>인원</span>
+              <strong>{result.payload.party_size}명</strong>
+            </div>
+            <div className="confirm-row">
+              <span>좌석</span>
+              <strong>
+                {SEATING.find((s) => s.value === result.payload.seating)?.label}
+              </strong>
+            </div>
+          </div>
+          {result.demo && (
+            <div className="confirm-demo">
+              데모 모드 — Supabase가 연결되지 않아 예약이 브라우저에 임시
+              저장되었습니다.
+            </div>
+          )}
+          <button className="btn gold" onClick={restart}>
+            새 예약 만들기
+          </button>
         </div>
-      </section>
+      </Reveal>
     );
   }
 
   return (
-    <section id="reserve" className="section reservation">
-      <div className="container">
-        <Reveal>
-          <div className="eyebrow centered">예약</div>
-        </Reveal>
-        <Reveal delay={120}>
-          <h2 className="section-title">
-            테이블을 <span className="italic">예약하세요.</span>
-          </h2>
-        </Reveal>
-        <Reveal delay={240}>
-          <div className="rule center" />
-        </Reveal>
+    <div className="res-shell">
+      {/* Stepper */}
+      <ol className="stepper" aria-label="예약 단계">
+        {STEPS.map((s, i) => (
+          <li
+            key={s.key}
+            className={`step ${i === step ? "current" : ""} ${
+              i < step ? "done" : ""
+            }`}
+          >
+            <span className="step-num">{String(i + 1).padStart(2, "0")}</span>
+            <span className="step-label">{s.label}</span>
+          </li>
+        ))}
+      </ol>
 
-        <Reveal delay={320} className="res-shell">
-          {/* Stepper */}
-          <ol className="stepper" aria-label="예약 단계">
-            {STEPS.map((s, i) => (
-              <li
-                key={s.key}
-                className={`step ${i === step ? "current" : ""} ${
-                  i < step ? "done" : ""
-                }`}
-              >
-                <span className="step-num">{String(i + 1).padStart(2, "0")}</span>
-                <span className="step-label">{s.label}</span>
-              </li>
-            ))}
-          </ol>
-
-          <div className="res-stage">
-            {step === 0 && (
-              <DateStep
-                days={days}
-                value={date}
-                onChange={(d) => {
-                  setDate(d);
-                  setTime(null);
-                }}
-              />
-            )}
-            {step === 1 && (
-              <TimeStep
-                date={date}
-                slots={slots}
-                loading={loadingSlots}
-                party={party}
-                value={time}
-                onChange={setTime}
-              />
-            )}
-            {step === 2 && <PartyStep value={party} onChange={setParty} />}
-            {step === 3 && (
-              <SeatingStep
-                value={seating}
-                onChange={setSeating}
-                party={party}
-              />
-            )}
-            {step === 4 && (
-              <DetailsStep register={register} errors={errors} />
-            )}
-            {step === 5 && (
-              <ConfirmStep
-                date={date}
-                time={time}
-                party={party}
-                seating={seating}
-                values={getValues()}
-                error={result?.message}
-              />
-            )}
-          </div>
-
-          <div className="res-nav">
-            <button
-              type="button"
-              className="btn ghost"
-              onClick={prev}
-              disabled={step === 0}
-            >
-              ← 이전
-            </button>
-            {step < STEPS.length - 1 ? (
-              <button
-                type="button"
-                className="btn solid"
-                onClick={next}
-                disabled={!canNext()}
-              >
-                다음 →
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn solid"
-                onClick={handleSubmit(onConfirm)}
-                disabled={submitting}
-              >
-                {submitting ? "처리 중…" : "예약 확정하기"}
-              </button>
-            )}
-          </div>
-        </Reveal>
+      <div className="res-stage">
+        {step === 0 && (
+          <DateStep
+            days={days}
+            value={date}
+            onChange={(d) => {
+              setDate(d);
+              setTime(null);
+            }}
+          />
+        )}
+        {step === 1 && (
+          <TimeStep
+            date={date}
+            slots={slots}
+            loading={loadingSlots}
+            party={party}
+            value={time}
+            onChange={setTime}
+          />
+        )}
+        {step === 2 && <PartyStep value={party} onChange={setParty} />}
+        {step === 3 && (
+          <SeatingStep value={seating} onChange={setSeating} party={party} />
+        )}
+        {step === 4 && <DetailsStep register={register} errors={errors} />}
+        {step === 5 && (
+          <ConfirmStep
+            date={date}
+            time={time}
+            party={party}
+            seating={seating}
+            values={getValues()}
+            error={result?.message}
+          />
+        )}
       </div>
-    </section>
+
+      <div className="res-nav">
+        <button
+          type="button"
+          className="btn ghost"
+          onClick={prev}
+          disabled={step === 0}
+        >
+          ← 이전
+        </button>
+        {step < STEPS.length - 1 ? (
+          <button
+            type="button"
+            className="btn solid"
+            onClick={next}
+            disabled={!canNext()}
+          >
+            다음 →
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn solid"
+            onClick={handleSubmit(onConfirm)}
+            disabled={submitting}
+          >
+            {submitting ? "처리 중…" : "예약 확정하기"}
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 
