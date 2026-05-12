@@ -97,12 +97,11 @@ export async function createReservation(payload) {
     return { data: row, error: null, demo: true };
   }
 
-  const { data, error } = await supabase
-    .from("reservations")
-    .insert(row)
-    .select()
-    .single();
-  return { data, error, demo: false };
+  // RLS 주의: .select() 를 붙이면 INSERT 후 행을 다시 읽기 위해
+  // SELECT 권한도 필요해짐. anon 손님은 SELECT 권한이 없으므로
+  // .insert() 만 호출하고 클라이언트가 들고 있는 row 를 그대로 반환.
+  const { error } = await supabase.from("reservations").insert(row);
+  return { data: row, error, demo: false };
 }
 
 /* ---- Admin ---- */
