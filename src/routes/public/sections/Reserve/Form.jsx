@@ -4,19 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import Reveal from "../../../../components/ui/Reveal";
+import MonthCalendar from "../../../../components/ui/MonthCalendar";
 import {
   SEATING,
   createReservation,
   getAvailability,
   isClosed,
 } from "../../../../lib/reservations";
-import {
-  fmtDate,
-  fmtDateShort,
-  fmtTime,
-  getNextDays,
-  toISO,
-} from "../../../../lib/utils";
+import { fmtDate, fmtTime, toISO } from "../../../../lib/utils";
 import "./reserve.css";
 
 const STEPS = [
@@ -66,7 +61,11 @@ export default function Reservation() {
     },
   });
 
-  const days = useMemo(() => getNextDays(45), []);
+  const maxDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 45);
+    return d;
+  }, []);
 
   useEffect(() => {
     if (!date) return;
@@ -174,6 +173,14 @@ export default function Reservation() {
 
   return (
     <div className="res-shell">
+      <header className="res-header">
+        <div className="eyebrow">예약</div>
+        <h1 className="res-title">
+          테이블을 <span className="italic">예약하세요.</span>
+        </h1>
+        <div className="rule center res-header-rule" />
+      </header>
+
       {/* Stepper */}
       <ol className="stepper" aria-label="예약 단계">
         {STEPS.map((s, i) => (
@@ -192,7 +199,7 @@ export default function Reservation() {
       <div className="res-stage">
         {step === 0 && (
           <DateStep
-            days={days}
+            maxDate={maxDate}
             value={date}
             onChange={(d) => {
               setDate(d);
@@ -262,7 +269,7 @@ export default function Reservation() {
 
 /* ---- Steps ---- */
 
-function DateStep({ days, value, onChange }) {
+function DateStep({ maxDate, value, onChange }) {
   return (
     <div className="step-pane">
       <div className="step-head">
@@ -270,26 +277,12 @@ function DateStep({ days, value, onChange }) {
         <h3>방문하실 날짜를 선택해주세요.</h3>
         <p className="step-hint">월요일은 정기 휴무이며, 최대 45일 이내까지 예약 가능합니다.</p>
       </div>
-      <div className="date-grid">
-        {days.map((d) => {
-          const closed = isClosed(d);
-          const selected =
-            value && toISO(value) === toISO(d);
-          return (
-            <button
-              key={d.toISOString()}
-              type="button"
-              className={`date-cell ${selected ? "selected" : ""}`}
-              disabled={closed}
-              onClick={() => onChange(d)}
-            >
-              <span className="date-day">{d.getDate()}</span>
-              <span className="date-dow">{fmtDateShort(d).split(" ")[1]}</span>
-              {closed && <span className="date-closed">휴무</span>}
-            </button>
-          );
-        })}
-      </div>
+      <MonthCalendar
+        value={value}
+        onChange={onChange}
+        maxDate={maxDate}
+        isClosed={isClosed}
+      />
     </div>
   );
 }

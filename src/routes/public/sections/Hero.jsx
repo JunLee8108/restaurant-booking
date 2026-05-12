@@ -40,30 +40,25 @@ export default function Hero() {
           <span className="dot">·</span>
           <span>Seoul</span>
         </div>
-
-        <Link to="/reserve" className="hero-cta">
-          <span>예약하기</span>
-          <svg
-            width="14"
-            height="10"
-            viewBox="0 0 14 10"
-            fill="none"
-            aria-hidden
-          >
-            <path
-              d="M1 5h12m0 0L9 1m4 4L9 9"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="square"
-            />
-          </svg>
-        </Link>
       </div>
 
-      <a href="#story" className="hero-scroll" aria-label="아래로 스크롤">
-        <span>SCROLL</span>
-        <div className="hero-scroll-line" />
-      </a>
+      <Link to="/reserve" className="hero-cta-bottom">
+        <span>예약하기</span>
+        <svg
+          width="14"
+          height="10"
+          viewBox="0 0 14 10"
+          fill="none"
+          aria-hidden
+        >
+          <path
+            d="M1 5h12m0 0L9 1m4 4L9 9"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="square"
+          />
+        </svg>
+      </Link>
     </section>
   );
 }
