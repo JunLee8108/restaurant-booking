@@ -26,9 +26,6 @@
   color: var(--paper);
   border-color: var(--ink);
 }
-.btn:active:not(:disabled) {
-  transform: translateY(1px);
-}
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -194,3 +191,143 @@
 .badge.danger {
   color: var(--danger);
 }
+
+/* ===== MonthCalendar ===== */
+.cal {
+  font-family: var(--sans);
+  max-width: 480px;
+  margin: 0 auto;
+}
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  margin-bottom: 18px;
+}
+.cal-month {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.cal-nav {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  font-family: var(--display);
+  cursor: pointer;
+  transition:
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease);
+}
+.cal-nav:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+.cal-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+.cal-weekday {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 6px 0;
+  font-weight: 500;
+}
+.cal-weekday.sun { color: var(--danger); }
+.cal-weekday.sat { color: #4a6b8a; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.cal-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease);
+  font-family: var(--display);
+}
+.cal-day {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+}
+.cal-cell:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+.cal-cell.is-other-month {
+  color: var(--muted-2);
+  opacity: 0.45;
+}
+.cal-cell.is-other-month .cal-day {
+  font-weight: 300;
+}
+.cal-cell.is-disabled {
+  cursor: not-allowed;
+  color: var(--muted-2);
+}
+.cal-cell.is-disabled:hover {
+  border-color: transparent;
+  color: var(--muted-2);
+}
+.cal-cell.is-closed .cal-day {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--muted-2);
+}
+.cal-closed {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--muted-2);
+}
+.cal-cell.is-today:not(.is-disabled) {
+  border-color: var(--gold-soft);
+}
+.cal-cell.is-today .cal-day {
+  color: var(--gold-deep);
+}
+.cal-cell.is-selected,
+.cal-cell.is-selected:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.cal-cell.is-selected .cal-day {
+  color: var(--paper);
+}
+/* Subtle weekend tint for in-month days */
+.cal-cell.is-sun:not(.is-other-month):not(.is-disabled):not(.is-selected) .cal-day { color: var(--danger); }
+.cal-cell.is-sat:not(.is-other-month):not(.is-disabled):not(.is-selected) .cal-day { color: #4a6b8a; }
