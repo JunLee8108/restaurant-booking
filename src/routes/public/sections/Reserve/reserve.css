@@ -1,10 +1,211 @@
-.reservation {
+/* ===== /reserve page ===== */
+.reserve-page {
   background: var(--paper);
 }
+
+.reserve-hero {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(11, 11, 12, 0.78), rgba(11, 11, 12, 0.92)),
+    url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=70")
+      center / cover;
+  color: var(--paper);
+  padding: 180px 0 100px;
+  text-align: center;
+}
+.reserve-hero-inner {
+  position: relative;
+}
+.reserve-hero .back-link {
+  position: absolute;
+  top: -40px;
+  left: 32px;
+  color: var(--muted-2);
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: color var(--t-med) var(--ease);
+}
+.reserve-hero .back-link:hover {
+  color: var(--gold-soft);
+}
+.reserve-h1 {
+  font-family: var(--display);
+  font-size: clamp(44px, 6vw, 76px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  margin: 22px 0 28px;
+}
+.reserve-hero .italic {
+  color: var(--gold-soft);
+  font-style: italic;
+}
+.reserve-hero .rule.center {
+  background: var(--gold);
+}
+.reserve-lede {
+  font-family: var(--serif-ko);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.95;
+  color: var(--bone);
+  margin: 32px auto 0;
+  max-width: 520px;
+}
+
+.reserve-main {
+  padding: 100px 0 120px;
+}
+.reserve-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 72px;
+  align-items: flex-start;
+}
+.reserve-form-wrap {
+  min-width: 0;
+}
+/* When confirmation card is shown, span full width and hide sidebar */
+.reserve-form-wrap:has(.confirm-card) {
+  grid-column: 1 / -1;
+}
+.reserve-grid:has(.confirm-card) .reserve-side {
+  display: none;
+}
+@media (max-width: 1000px) {
+  .reserve-grid { grid-template-columns: 1fr; gap: 48px; }
+  .reserve-main { padding: 64px 0 80px; }
+  .reserve-hero { padding: 140px 0 72px; }
+  .reserve-hero .back-link { position: static; display: inline-block; margin-bottom: 20px; }
+}
+
+/* Sidebar */
+.reserve-side {
+  position: sticky;
+  top: 100px;
+  padding: 8px 0;
+}
+.side-mark {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.7em;
+  margin-bottom: 16px;
+}
+.side-title {
+  font-family: var(--display);
+  font-size: 42px;
+  font-weight: 300;
+  line-height: 1.05;
+  margin: 0;
+}
+.side-title .italic {
+  color: var(--gold-deep);
+  font-style: italic;
+}
+.side-sub {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.side-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
+  margin: 28px 0;
+}
+.side-block {
+  margin-bottom: 28px;
+}
+.side-block .eyebrow {
+  display: block;
+  margin-bottom: 10px;
+}
+.side-block p {
+  font-family: var(--serif-ko);
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--ink-2);
+  font-weight: 300;
+}
+.side-price {
+  font-family: var(--display) !important;
+  font-size: 30px !important;
+  font-weight: 400 !important;
+  color: var(--ink) !important;
+  line-height: 1 !important;
+  margin: 0 0 6px;
+}
+.side-unit {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+.side-fine {
+  font-size: 12px !important;
+  color: var(--muted) !important;
+  line-height: 1.7 !important;
+}
+.side-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.side-list li {
+  font-family: var(--serif-ko);
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--ink-2);
+  padding-left: 14px;
+  position: relative;
+}
+.side-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 5px;
+  height: 1px;
+  background: var(--gold);
+}
+.side-quote {
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+  margin-top: 8px;
+}
+.side-quote p {
+  font-family: var(--display) !important;
+  font-style: italic;
+  font-size: 22px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+  font-weight: 300 !important;
+}
+.side-quote .italic {
+  color: var(--gold-deep);
+}
+.side-sign {
+  margin-top: 12px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Form shell adapted from previous section style */
 .res-shell {
-  margin-top: 72px;
-  max-width: 980px;
-  margin-inline: auto;
   border: 1px solid var(--line);
   background: #fff;
   padding: 56px 56px 40px;
@@ -308,7 +509,7 @@
 /* Confirm card */
 .confirm-card {
   max-width: 640px;
-  margin: 72px auto 0;
+  margin: 0 auto;
   background: #fff;
   border: 1px solid var(--line);
   padding: 64px 56px;

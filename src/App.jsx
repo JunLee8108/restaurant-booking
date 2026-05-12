@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 
 import Home from "./routes/public/Home";
+import Reserve from "./routes/public/Reserve";
 import "./components/ui/ui.css";
 
 const AdminLayout = lazy(() => import("./routes/admin/AdminLayout"));
@@ -35,6 +36,7 @@ export default function App() {
       <Suspense fallback={<div className="admin-boot">불러오는 중…</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/reserve" element={<Reserve />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />

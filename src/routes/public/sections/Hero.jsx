@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import "./public.css";
 
 const HERO_IMG =
@@ -40,7 +41,7 @@ export default function Hero() {
           <span>Seoul</span>
         </div>
 
-        <a href="#reserve" className="hero-cta">
+        <Link to="/reserve" className="hero-cta">
           <span>예약하기</span>
           <svg
             width="14"
@@ -56,7 +57,7 @@ export default function Hero() {
               strokeLinecap="square"
             />
           </svg>
-        </a>
+        </Link>
       </div>
 
       <a href="#story" className="hero-scroll" aria-label="아래로 스크롤">
