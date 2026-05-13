@@ -21,7 +21,9 @@
   --display: "Cormorant Garamond", "Noto Serif KR", "Apple SD Gothic Neo",
     serif;
   --serif-ko: "Noto Serif KR", "Cormorant Garamond", serif;
-  --sans: "Inter", "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif;
+  --sans: "Pretendard Variable", Pretendard, "Inter",
+    -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo",
+    sans-serif;
 
   /* Motion */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
