@@ -929,7 +929,6 @@
 }
 /* gap 만 사용하므로 자식들의 기본 margin-bottom 무효화 (이 페이지 한정) */
 .stats-page > .page-head,
-.stats-page > .month-nav,
 .stats-page > .stat-grid,
 .stats-page > .panel,
 .stats-page > .stats-row {

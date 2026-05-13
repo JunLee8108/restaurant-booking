@@ -70,27 +70,26 @@ export default function Stats() {
           <div className="eyebrow">Insights</div>
           <h1 className="page-title">통계</h1>
         </div>
+        <div className="month-nav">
+          <button
+            type="button"
+            className="cal-nav"
+            onClick={() => setViewMonth((m) => subMonths(m, 1))}
+            aria-label="이전 달"
+          >
+            ‹
+          </button>
+          <div className="month-nav-label">{monthLabel}</div>
+          <button
+            type="button"
+            className="cal-nav"
+            onClick={() => setViewMonth((m) => addMonths(m, 1))}
+            aria-label="다음 달"
+          >
+            ›
+          </button>
+        </div>
       </header>
-
-      <div className="month-nav">
-        <button
-          type="button"
-          className="cal-nav"
-          onClick={() => setViewMonth((m) => subMonths(m, 1))}
-          aria-label="이전 달"
-        >
-          ‹
-        </button>
-        <div className="month-nav-label">{monthLabel}</div>
-        <button
-          type="button"
-          className="cal-nav"
-          onClick={() => setViewMonth((m) => addMonths(m, 1))}
-          aria-label="다음 달"
-        >
-          ›
-        </button>
-      </div>
 
       {loading && (
         <section className="panel">
