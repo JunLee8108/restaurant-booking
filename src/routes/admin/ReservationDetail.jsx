@@ -58,7 +58,7 @@ export default function ReservationDetail() {
 
       <header className="page-head">
         <div>
-          <div className="eyebrow">예약 상세 · {r.confirmation_code}</div>
+          <div className="eyebrow">예약 상세</div>
           <h1 className="page-title">{r.customer_name}</h1>
         </div>
         <span className={`badge ${STATUS_META[r.status].tone} lg`}>
@@ -69,6 +69,10 @@ export default function ReservationDetail() {
       <section className="detail-grid">
         <div className="panel">
           <h2 className="panel-h">예약 정보</h2>
+          <DRow
+            label="예약번호"
+            value={<code className="conf-code">{r.confirmation_code}</code>}
+          />
           <DRow label="날짜" value={fmtDate(r.reservation_date)} />
           <DRow label="시간" value={fmtTime(r.reservation_time)} />
           <DRow label="인원" value={`${r.party_size}명`} />

@@ -802,3 +802,11 @@
     font-size: 32px;
   }
 }
+
+/* 예약번호 식별자 — 모노스페이스 + 골드 톤 */
+.conf-code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 14px;
+  color: var(--gold-deep);
+  letter-spacing: 0.05em;
+}
