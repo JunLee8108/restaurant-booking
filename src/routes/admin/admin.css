@@ -16,6 +16,15 @@
   top: 0;
   height: 100svh;
 }
+.admin-side-top {
+  display: contents; /* 데스크탑: 자식들이 admin-side 의 flex column 에 그대로 참여 */
+}
+.admin-side-body {
+  display: contents;
+}
+.admin-toggle {
+  display: none; /* 데스크탑에서 숨김 */
+}
 .admin-brand {
   display: flex;
   align-items: center;
@@ -107,19 +116,85 @@
 
 @media (max-width: 900px) {
   .admin-shell { grid-template-columns: 1fr; }
+
   .admin-side {
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 30;
     height: auto;
-    flex-direction: row;
-    align-items: center;
-    padding: 18px 22px;
-    gap: 20px;
+    padding: 0;
+    gap: 0;
+    border-bottom: 1px solid var(--line-soft);
   }
-  .admin-nav { flex-direction: row; gap: 8px; flex-grow: 0; }
-  .admin-nav a { padding: 8px 12px; border-left: none; border-bottom: 2px solid transparent; }
-  .admin-nav a.active { border-bottom-color: var(--gold); }
-  .admin-foot { margin-left: auto; }
-  .admin-foot .admin-demo { display: none; }
+
+  /* 상단 바: 브랜드 + 햄버거 */
+  .admin-side-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+  }
+
+  /* 드로어 본체 — 기본은 접힘 */
+  .admin-side-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows var(--t-med) var(--ease);
+  }
+  .admin-side.open .admin-side-body {
+    grid-template-rows: 1fr;
+  }
+  .admin-side-body > * {
+    min-height: 0;
+  }
+
+  /* 햄버거 버튼 */
+  .admin-toggle {
+    display: inline-block;
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .admin-toggle span {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    height: 1px;
+    background: var(--paper);
+    transition: transform var(--t-med) var(--ease);
+  }
+  .admin-toggle span:nth-child(1) { top: 14px; }
+  .admin-toggle span:nth-child(2) { top: 22px; }
+  .admin-toggle.open span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+  .admin-toggle.open span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+
+  /* nav + foot — 펼친 상태 */
+  .admin-nav {
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px 8px;
+  }
+  .admin-nav a {
+    padding: 12px 14px;
+    border-left: 2px solid transparent;
+    border-bottom: none;
+  }
+  .admin-nav a.active {
+    border-left-color: var(--gold);
+    border-bottom-color: transparent;
+  }
+
+  .admin-foot {
+    padding: 8px 14px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 8px;
+  }
+  .admin-foot .admin-demo { display: block; }
+
   .admin-main { padding: 32px 20px; }
 }
 
