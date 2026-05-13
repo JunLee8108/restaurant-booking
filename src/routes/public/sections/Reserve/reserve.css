@@ -25,6 +25,13 @@
 @media (max-width: 1000px) {
   .reserve-grid { grid-template-columns: 1fr; gap: 48px; }
   .reserve-main { padding: 120px 0 80px; }
+  /* 모바일: 폼이 위, 사이드 정보는 아래로. sticky 해제 */
+  .reserve-form-wrap { order: 1; }
+  .reserve-side {
+    order: 2;
+    position: static;
+    top: auto;
+  }
 }
 
 /* Sidebar */
