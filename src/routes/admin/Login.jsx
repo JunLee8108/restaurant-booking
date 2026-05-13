@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getSession, signIn } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabase";
+import { useNoIndex } from "../../lib/useNoIndex";
 import "./admin.css";
 
 export default function Login() {
+  useNoIndex();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);

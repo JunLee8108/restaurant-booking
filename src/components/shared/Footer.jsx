@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import "./shared.css";
 
 export default function Footer() {
@@ -37,7 +38,13 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} La Stella. All rights reserved.</span>
-          <span>Crafted with reverence for seasonal Italian artistry.</span>
+          <div className="footer-bottom-right">
+            <span>Crafted with reverence for seasonal Italian artistry.</span>
+            <span className="footer-dot" aria-hidden>·</span>
+            <Link to="/admin" className="footer-admin-link">
+              관리자
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

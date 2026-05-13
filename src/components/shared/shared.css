@@ -195,6 +195,21 @@
   text-transform: uppercase;
   color: var(--muted);
 }
+.footer-bottom-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.footer-dot {
+  color: var(--gold);
+}
+.footer-admin-link {
+  color: var(--muted);
+  transition: color var(--t-fast) var(--ease);
+}
+.footer-admin-link:hover {
+  color: var(--gold-soft);
+}
 @media (max-width: 768px) {
   .footer-cols {
     grid-template-columns: 1fr;

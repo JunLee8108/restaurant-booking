@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import { getSession, onAuthChange, signOut } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabase";
+import { useNoIndex } from "../../lib/useNoIndex";
 import "./admin.css";
 
 export default function AdminLayout() {
+  useNoIndex();
   const [session, setSession] = useState(undefined);
   const navigate = useNavigate();
 
