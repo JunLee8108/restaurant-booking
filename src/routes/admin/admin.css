@@ -473,3 +473,98 @@
 @media (max-width: 500px) {
   .login-card { padding: 36px 24px; }
 }
+
+/* ===== Month nav (reservations list) ===== */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 12px 0;
+}
+.month-nav-label {
+  font-family: var(--display);
+  font-size: 24px;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 200px;
+  justify-content: center;
+}
+.month-nav-count {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+  padding: 8px 0 24px;
+}
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
+}
+.page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+.page-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ===== Admin home link (sidebar foot) ===== */
+.admin-home-link {
+  display: block;
+  padding: 10px 14px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+  transition: color var(--t-med) var(--ease), background var(--t-med) var(--ease);
+}
+.admin-home-link:hover {
+  color: var(--gold-soft);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ===== Login home link ===== */
+.login-home {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color var(--t-fast) var(--ease);
+}
+.login-home:hover {
+  color: var(--gold-deep);
+}
+.login-card {
+  position: relative;
+}
