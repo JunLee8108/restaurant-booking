@@ -175,20 +175,20 @@ export default function ReservationsList() {
                   )
                   .map((r) => (
                     <tr key={r.id}>
-                      <td className="mono">{fmtTime(r.reservation_time)}</td>
-                      <td>
+                      <td className="td-time mono">{fmtTime(r.reservation_time)}</td>
+                      <td className="td-customer">
                         <div className="cell-strong">{r.customer_name}</div>
                         <div className="cell-sub">{r.email}</div>
                       </td>
-                      <td>{r.party_size}명</td>
-                      <td>{seatingLabel(r.seating)}</td>
-                      <td className="mono small">{r.confirmation_code}</td>
-                      <td>
+                      <td className="td-party">{r.party_size}명</td>
+                      <td className="td-seating">{seatingLabel(r.seating)}</td>
+                      <td className="td-code mono small">{r.confirmation_code}</td>
+                      <td className="td-status">
                         <span className={`badge ${STATUS_META[r.status].tone}`}>
                           {STATUS_META[r.status].label}
                         </span>
                       </td>
-                      <td>
+                      <td className="td-action">
                         <Link
                           to={`/admin/reservations/${r.id}`}
                           className="btn ghost sm"

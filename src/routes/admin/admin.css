@@ -136,19 +136,30 @@
     padding: 16px 22px;
   }
 
-  /* 드로어 본체 — 단일 grid row 0fr↔1fr 접힘 */
+  /* 드로어 본체 — 상단 바 아래로 absolute 오버레이, transform 으로 합성층 처리 */
   .admin-side-body {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows var(--t-med) var(--ease);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ink);
+    border-bottom: 1px solid var(--line-soft);
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--t-med) var(--ease),
+      opacity var(--t-fast) var(--ease);
+    will-change: transform, opacity;
   }
   .admin-side.open .admin-side-body {
-    grid-template-rows: 1fr;
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
   .admin-side-body-inner {
     display: block;
-    overflow: hidden;
-    min-height: 0;
+    padding: 8px 0 20px;
   }
 
   /* 햄버거 버튼 */
@@ -644,4 +655,73 @@
 }
 .login-card {
   position: relative;
+}
+
+/* ===== Mobile card layout for admin tables ===== */
+@media (max-width: 700px) {
+  .panel { padding: 22px; }
+  .panel-head { margin-bottom: 14px; padding-bottom: 12px; }
+  .panel-head h2, .panel-h { font-size: 22px; }
+
+  .table thead { display: none; }
+  .table, .table tbody { display: block; width: 100%; }
+  .table tr {
+    display: block;
+    position: relative;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .table tr:last-child { border-bottom: none; }
+  .table tr:hover { background: transparent; }
+  .table td {
+    display: block;
+    padding: 0;
+    border: none;
+  }
+
+  /* 1행: 시간 + 상태 (우상단 absolute) */
+  .td-time {
+    font-family: var(--display);
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .td-status {
+    position: absolute;
+    top: 18px;
+    right: 0;
+  }
+
+  /* 고객 정보 */
+  .td-customer {
+    margin: 4px 0 10px;
+  }
+  .td-customer .cell-strong { font-size: 17px; }
+  .td-customer .cell-sub { font-size: 12px; }
+
+  /* 메타: 인원 · 좌석 · 코드 — 한 줄에 인라인 */
+  .td-party,
+  .td-seating,
+  .td-code {
+    display: inline;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .td-party::after,
+  .td-seating::after {
+    content: " · ";
+    color: var(--line);
+    margin: 0 4px;
+  }
+  .td-code { margin-left: 0; }
+
+  /* 액션 */
+  .td-action {
+    margin-top: 14px;
+    text-align: right;
+  }
+
+  /* 페이지 헤더 / 헤딩 톤 다운 */
+  .page-title { font-size: 32px; }
 }
