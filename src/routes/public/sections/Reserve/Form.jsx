@@ -300,9 +300,8 @@ function TimeStep({ date, slots, loading, party, value, onChange }) {
     <div className="step-pane">
       <div className="step-head">
         <div className="eyebrow">Step 02</div>
-        <h3>
-          {date ? fmtDate(date) : "—"} · 시간을 선택해주세요.
-        </h3>
+        {date && <div className="step-meta">{fmtDate(date)}</div>}
+        <h3>시간을 선택해주세요.</h3>
         <p className="step-hint">
           코스는 약 2시간 30분 진행되며, 마지막 입장은 20:30입니다.
         </p>

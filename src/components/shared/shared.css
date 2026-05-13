@@ -5,14 +5,11 @@
   z-index: 50;
   transition:
     background var(--t-med) var(--ease),
-    border-color var(--t-med) var(--ease),
-    backdrop-filter var(--t-med) var(--ease);
+    border-color var(--t-med) var(--ease);
   border-bottom: 1px solid transparent;
 }
 .nav.is-scrolled {
-  background: rgba(11, 11, 12, 0.88);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  background: rgba(11, 11, 12, 0.96);
   border-bottom-color: var(--line-soft);
 }
 .nav-inner {
@@ -120,8 +117,7 @@
   .nav-links {
     position: fixed;
     inset: 78px 0 0 0;
-    background: rgba(11, 11, 12, 0.96);
-    backdrop-filter: blur(16px);
+    background: var(--ink);
     flex-direction: column;
     justify-content: center;
     gap: 28px;
