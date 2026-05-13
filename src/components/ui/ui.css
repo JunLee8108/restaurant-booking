@@ -219,9 +219,9 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--line);
-  background: #fff;
+  border-radius: 8px;
   color: var(--ink);
-  font-size: 18px;
+  font-size: 24px;
   line-height: 1;
   font-family: var(--display);
   cursor: pointer;
@@ -252,8 +252,12 @@
   padding: 6px 0;
   font-weight: 500;
 }
-.cal-weekday.sun { color: var(--danger); }
-.cal-weekday.sat { color: #4a6b8a; }
+.cal-weekday.sun {
+  color: var(--danger);
+}
+.cal-weekday.sat {
+  color: #4a6b8a;
+}
 
 .cal-grid {
   display: grid;
@@ -332,5 +336,11 @@
   color: var(--paper);
 }
 /* Subtle weekend tint for in-month days */
-.cal-cell.is-sun:not(.is-other-month):not(.is-disabled):not(.is-selected) .cal-day { color: var(--danger); }
-.cal-cell.is-sat:not(.is-other-month):not(.is-disabled):not(.is-selected) .cal-day { color: #4a6b8a; }
+.cal-cell.is-sun:not(.is-other-month):not(.is-disabled):not(.is-selected)
+  .cal-day {
+  color: var(--danger);
+}
+.cal-cell.is-sat:not(.is-other-month):not(.is-disabled):not(.is-selected)
+  .cal-day {
+  color: #4a6b8a;
+}
