@@ -19,7 +19,8 @@
 .admin-side-top {
   display: contents; /* 데스크탑: 자식들이 admin-side 의 flex column 에 그대로 참여 */
 }
-.admin-side-body {
+.admin-side-body,
+.admin-side-body-inner {
   display: contents;
 }
 .admin-toggle {
@@ -135,17 +136,18 @@
     padding: 16px 22px;
   }
 
-  /* 드로어 본체 — 기본은 접힘 */
+  /* 드로어 본체 — 단일 grid row 0fr↔1fr 접힘 */
   .admin-side-body {
     display: grid;
     grid-template-rows: 0fr;
-    overflow: hidden;
     transition: grid-template-rows var(--t-med) var(--ease);
   }
   .admin-side.open .admin-side-body {
     grid-template-rows: 1fr;
   }
-  .admin-side-body > * {
+  .admin-side-body-inner {
+    display: block;
+    overflow: hidden;
     min-height: 0;
   }
 

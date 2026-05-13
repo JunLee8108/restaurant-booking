@@ -68,25 +68,27 @@ export default function AdminLayout() {
         </div>
 
         <div className="admin-side-body">
-          <nav className="admin-nav">
-            <NavLink to="/admin" end>
-              대시보드
-            </NavLink>
-            <NavLink to="/admin/reservations">예약 관리</NavLink>
-          </nav>
+          <div className="admin-side-body-inner">
+            <nav className="admin-nav">
+              <NavLink to="/admin" end>
+                대시보드
+              </NavLink>
+              <NavLink to="/admin/reservations">예약 관리</NavLink>
+            </nav>
 
-          <div className="admin-foot">
-            {!isSupabaseConfigured && (
-              <div className="admin-demo">
-                데모 모드 — Supabase 미연결
-              </div>
-            )}
-            <Link to="/" className="admin-home-link">
-              ← 홈페이지
-            </Link>
-            <button className="btn ghost" onClick={onSignOut}>
-              로그아웃
-            </button>
+            <div className="admin-foot">
+              {!isSupabaseConfigured && (
+                <div className="admin-demo">
+                  데모 모드 — Supabase 미연결
+                </div>
+              )}
+              <Link to="/" className="admin-home-link">
+                ← 홈페이지
+              </Link>
+              <button className="btn ghost" onClick={onSignOut}>
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
       </aside>
