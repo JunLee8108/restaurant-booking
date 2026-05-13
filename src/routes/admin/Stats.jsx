@@ -64,7 +64,7 @@ export default function Stats() {
   const monthLabel = format(viewMonth, "yyyy년 M월", { locale: ko });
 
   return (
-    <div className="page">
+    <div className="page stats-page">
       <header className="page-head">
         <div>
           <div className="eyebrow">Insights</div>
@@ -108,8 +108,10 @@ export default function Stats() {
         <>
           <MetricCards metrics={metrics} last={hasLast ? lastMetrics : null} />
           <SlotChart slotCounts={slotCounts} />
-          <StatusChart statusCounts={statusCounts} total={metrics.total} />
-          <SeatingChart seatingCounts={seatingCounts} total={metrics.total} />
+          <div className="stats-row">
+            <StatusChart statusCounts={statusCounts} total={metrics.total} />
+            <SeatingChart seatingCounts={seatingCounts} total={metrics.total} />
+          </div>
           <RegularsPanel regulars={regulars} />
           <WatchlistPanel watchlist={watchlist} />
         </>
