@@ -13,7 +13,7 @@ export default function Footer() {
         <div className="footer-cols">
           <div>
             <div className="eyebrow on-dark">방문</div>
-            <p>서울특별시 강남구 도산대로 99길 12<br />La Stella, 2F</p>
+            <p>경기도 의정부시 장곡로 22 (장암동)<br />아일랜드 캐슬 리조트 2F</p>
           </div>
           <div>
             <div className="eyebrow on-dark">문의</div>
@@ -26,9 +26,11 @@ export default function Footer() {
           <div>
             <div className="eyebrow on-dark">영업 시간</div>
             <p>
-              화 – 일 · 18:00 – 22:00
+              조식 07:00 – 10:00
               <br />
-              월요일 휴무
+              저녁 18:00 – 22:00
+              <br />
+              중식 단체 예약 시
             </p>
           </div>
         </div>

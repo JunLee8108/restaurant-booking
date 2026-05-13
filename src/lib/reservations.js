@@ -2,11 +2,11 @@ import { supabase, isSupabaseConfigured } from "./supabase";
 
 /**
  * 영업 정책 (Supabase 미연결 시에도 동작하는 클라이언트 기본값)
- * - 영업일: 화 ~ 일 (월요일 휴무)
+ * - 영업일: 매일 (휴무 없음)
  * - 디너 슬롯: 18:00 / 18:30 / 19:00 / 19:30 / 20:00 / 20:30
  * - 슬롯당 capacity: 20
  */
-export const CLOSED_DAYS = [1]; // 0=일,1=월
+export const CLOSED_DAYS = []; // 휴무일 없음
 export const DEFAULT_SLOTS = [
   "18:00",
   "18:30",
