@@ -10,6 +10,7 @@ const Login = lazy(() => import("./routes/admin/Login"));
 const Dashboard = lazy(() => import("./routes/admin/Dashboard"));
 const ReservationsList = lazy(() => import("./routes/admin/ReservationsList"));
 const ReservationDetail = lazy(() => import("./routes/admin/ReservationDetail"));
+const Stats = lazy(() => import("./routes/admin/Stats"));
 
 function ScrollAndHashHandler() {
   const { hash, pathname } = useLocation();
@@ -42,6 +43,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="reservations" element={<ReservationsList />} />
             <Route path="reservations/:id" element={<ReservationDetail />} />
+            <Route path="stats" element={<Stats />} />
           </Route>
         </Routes>
       </Suspense>
