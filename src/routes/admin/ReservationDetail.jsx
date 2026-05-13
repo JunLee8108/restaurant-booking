@@ -81,7 +81,6 @@ export default function ReservationDetail() {
           <DRow label="시간" value={fmtTime(r.reservation_time)} />
           <DRow label="인원" value={`${r.party_size}명`} />
           <DRow label="좌석" value={seatingLabel(r.seating)} />
-          <DRow label="요청" value={r.special_requests || "—"} multiline />
         </div>
 
         <div className="panel">
@@ -89,6 +88,7 @@ export default function ReservationDetail() {
           <DRow label="이름" value={r.customer_name} />
           <DRow label="이메일" value={r.email} />
           <DRow label="전화" value={r.phone} />
+          <DRow label="요청" value={r.special_requests || "—"} multiline />
           <DRow
             label="접수일"
             value={r.created_at ? fmtDate(r.created_at) : "—"}
