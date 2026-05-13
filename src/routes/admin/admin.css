@@ -138,6 +138,7 @@
 
   /* 드로어 본체 — 상단 바 아래로 absolute 오버레이, transform 으로 합성층 처리 */
   .admin-side-body {
+    display: block;        /* 데스크탑의 contents 를 명시적으로 오버라이드 */
     position: absolute;
     top: 100%;
     left: 0;
