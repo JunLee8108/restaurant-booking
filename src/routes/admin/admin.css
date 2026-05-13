@@ -116,7 +116,9 @@
 }
 
 @media (max-width: 900px) {
-  .admin-shell { grid-template-columns: 1fr; }
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
 
   .admin-side {
     position: sticky;
@@ -138,7 +140,7 @@
 
   /* 드로어 본체 — 상단 바 아래로 absolute 오버레이, transform 으로 합성층 처리 */
   .admin-side-body {
-    display: block;        /* 데스크탑의 contents 를 명시적으로 오버라이드 */
+    display: block; /* 데스크탑의 contents 를 명시적으로 오버라이드 */
     position: absolute;
     top: 100%;
     left: 0;
@@ -181,10 +183,18 @@
     background: var(--paper);
     transition: transform var(--t-med) var(--ease);
   }
-  .admin-toggle span:nth-child(1) { top: 14px; }
-  .admin-toggle span:nth-child(2) { top: 22px; }
-  .admin-toggle.open span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
-  .admin-toggle.open span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+  .admin-toggle span:nth-child(1) {
+    top: 14px;
+  }
+  .admin-toggle span:nth-child(2) {
+    top: 22px;
+  }
+  .admin-toggle.open span:nth-child(1) {
+    transform: translateY(4px) rotate(45deg);
+  }
+  .admin-toggle.open span:nth-child(2) {
+    transform: translateY(-4px) rotate(-45deg);
+  }
 
   /* nav + foot — 펼친 상태 */
   .admin-nav {
@@ -207,9 +217,13 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     margin-top: 8px;
   }
-  .admin-foot .admin-demo { display: block; }
+  .admin-foot .admin-demo {
+    display: block;
+  }
 
-  .admin-main { padding: 32px 20px; }
+  .admin-main {
+    padding: 32px 20px;
+  }
 }
 
 /* ===== Page ===== */
@@ -247,7 +261,9 @@
   color: var(--muted);
   margin-bottom: 14px;
 }
-.back-link:hover { color: var(--gold-deep); }
+.back-link:hover {
+  color: var(--gold-deep);
+}
 
 /* ===== Stat grid ===== */
 .stat-grid {
@@ -259,6 +275,7 @@
 .stat {
   background: #fff;
   border: 1px solid var(--line-soft);
+  border-radius: 8px;
   padding: 28px 24px;
   position: relative;
 }
@@ -295,7 +312,9 @@
   color: var(--muted);
 }
 @media (max-width: 800px) {
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ===== Panel ===== */
@@ -304,6 +323,7 @@
   border: 1px solid var(--line-soft);
   padding: 32px;
   margin-bottom: 24px;
+  border-radius: 8px;
 }
 .panel-head {
   display: flex;
@@ -320,7 +340,9 @@
   font-weight: 400;
   margin: 0;
 }
-.panel-h { margin-bottom: 22px; }
+.panel-h {
+  margin-bottom: 22px;
+}
 .panel-link {
   font-family: var(--sans);
   font-size: 11px;
@@ -328,7 +350,9 @@
   text-transform: uppercase;
   color: var(--gold-deep);
 }
-.panel-link:hover { color: var(--ink); }
+.panel-link:hover {
+  color: var(--ink);
+}
 .empty {
   text-align: center;
   padding: 48px 0;
@@ -359,8 +383,12 @@
   border-bottom: 1px solid var(--line-soft);
   vertical-align: middle;
 }
-.table tr:last-child td { border-bottom: none; }
-.table tr:hover { background: rgba(184, 147, 90, 0.04); }
+.table tr:last-child td {
+  border-bottom: none;
+}
+.table tr:hover {
+  background: rgba(184, 147, 90, 0.04);
+}
 .cell-strong {
   font-family: var(--display);
   font-size: 18px;
@@ -376,8 +404,15 @@
   font-size: 13px;
   letter-spacing: 0.05em;
 }
-.mono.small { font-size: 12px; color: var(--muted); }
-.muted { color: var(--muted); font-weight: 300; font-size: 13px; }
+.mono.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.muted {
+  color: var(--muted);
+  font-weight: 300;
+  font-size: 13px;
+}
 
 /* ===== Toolbar / filters ===== */
 .toolbar {
@@ -400,12 +435,15 @@
   text-transform: uppercase;
   padding: 8px 14px;
   border: 1px solid var(--line);
+  border-radius: 8px;
   color: var(--muted);
   background: #fff;
   transition: all var(--t-fast) var(--ease);
   cursor: pointer;
 }
-.filter-chip:hover { color: var(--ink); }
+.filter-chip:hover {
+  color: var(--ink);
+}
 .filter-chip.active {
   background: var(--ink);
   color: var(--paper);
@@ -417,10 +455,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  margin-bottom: 24px;
 }
 @media (max-width: 800px) {
-  .detail-grid { grid-template-columns: 1fr; }
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .d-row {
   display: grid;
@@ -429,8 +468,12 @@
   padding: 12px 0;
   border-bottom: 1px solid var(--line-soft);
 }
-.d-row:last-child { border-bottom: none; }
-.d-row.multiline { grid-template-columns: 120px 1fr; }
+.d-row:last-child {
+  border-bottom: none;
+}
+.d-row.multiline {
+  grid-template-columns: 120px 1fr;
+}
 .d-label {
   font-family: var(--sans);
   font-size: 11px;
@@ -460,6 +503,7 @@
   text-transform: uppercase;
   padding: 10px 18px;
   border: 1px solid var(--line);
+  border-radius: 8px;
   background: #fff;
   color: var(--ink);
   transition: all var(--t-fast) var(--ease);
@@ -500,7 +544,8 @@
   min-height: 100svh;
   background:
     linear-gradient(180deg, rgba(11, 11, 12, 0.7), rgba(11, 11, 12, 0.92)),
-    url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=70") center / cover;
+    url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=70")
+      center / cover;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -556,7 +601,9 @@
   padding: 1px 6px;
 }
 @media (max-width: 500px) {
-  .login-card { padding: 36px 24px; }
+  .login-card {
+    padding: 36px 24px;
+  }
 }
 
 /* ===== Month nav (reservations list) ===== */
@@ -635,7 +682,9 @@
   font-size: 12px;
   letter-spacing: 0.06em;
   color: var(--muted-2);
-  transition: color var(--t-med) var(--ease), background var(--t-med) var(--ease);
+  transition:
+    color var(--t-med) var(--ease),
+    background var(--t-med) var(--ease);
 }
 .admin-home-link:hover {
   color: var(--gold-soft);
@@ -683,16 +732,26 @@
   .panel-head { margin-bottom: 14px; padding-bottom: 12px; }
   .panel-head h2, .panel-h { font-size: 22px; }
 
-  .table thead { display: none; }
-  .table, .table tbody { display: block; width: 100%; }
+  .table thead {
+    display: none;
+  }
+  .table,
+  .table tbody {
+    display: block;
+    width: 100%;
+  }
   .table tr {
     display: block;
     position: relative;
     padding: 18px 0;
     border-bottom: 1px solid var(--line-soft);
   }
-  .table tr:last-child { border-bottom: none; }
-  .table tr:hover { background: transparent; }
+  .table tr:last-child {
+    border-bottom: none;
+  }
+  .table tr:hover {
+    background: transparent;
+  }
   .table td {
     display: block;
     padding: 0;
@@ -716,8 +775,12 @@
   .td-customer {
     margin: 4px 0 10px;
   }
-  .td-customer .cell-strong { font-size: 17px; }
-  .td-customer .cell-sub { font-size: 12px; }
+  .td-customer .cell-strong {
+    font-size: 17px;
+  }
+  .td-customer .cell-sub {
+    font-size: 12px;
+  }
 
   /* 메타: 인원 · 좌석 · 코드 — 한 줄에 인라인 */
   .td-party,
@@ -734,7 +797,9 @@
     color: var(--line);
     margin: 0 4px;
   }
-  .td-code { margin-left: 0; }
+  .td-code {
+    margin-left: 0;
+  }
 
   /* 액션 */
   .td-action {
@@ -743,7 +808,9 @@
   }
 
   /* 페이지 헤더 / 헤딩 톤 다운 */
-  .page-title { font-size: 32px; }
+  .page-title {
+    font-size: 32px;
+  }
 }
 
 /* 예약번호 식별자 — 모노스페이스 + 골드 톤 */
