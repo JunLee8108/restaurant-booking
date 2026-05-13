@@ -289,6 +289,25 @@ function DateStep({ maxDate, value, onChange }) {
 }
 
 function TimeStep({ date, slots, loading, party, value, onChange }) {
+  const breakfast = slots.filter((s) => s.slot_time < "12:00");
+  const dinner = slots.filter((s) => s.slot_time >= "12:00");
+
+  const renderChip = (s) => {
+    const disabled = s.remaining < party;
+    const selected = value === s.slot_time;
+    return (
+      <button
+        key={s.slot_time}
+        type="button"
+        className={`chip ${selected ? "selected" : ""}`}
+        disabled={disabled}
+        onClick={() => onChange(s.slot_time)}
+      >
+        {fmtTime(s.slot_time)}
+      </button>
+    );
+  };
+
   return (
     <div className="step-pane">
       <div className="step-head">
@@ -296,30 +315,27 @@ function TimeStep({ date, slots, loading, party, value, onChange }) {
         {date && <div className="step-meta">{fmtDate(date)}</div>}
         <h3>시간을 선택해주세요.</h3>
         <p className="step-hint">
-          코스는 약 2시간 30분 진행되며, 마지막 입장은 20:30입니다.
+          조식 07:00 – 10:00 · 저녁 18:00 – 22:00 (마지막 입장 21:30)
         </p>
       </div>
-      <div className="time-grid">
-        {loading && (
-          <div className="time-loading shimmer">슬롯을 불러오는 중…</div>
-        )}
-        {!loading &&
-          slots.map((s) => {
-            const disabled = s.remaining < party;
-            const selected = value === s.slot_time;
-            return (
-              <button
-                key={s.slot_time}
-                type="button"
-                className={`chip ${selected ? "selected" : ""}`}
-                disabled={disabled}
-                onClick={() => onChange(s.slot_time)}
-              >
-                {fmtTime(s.slot_time)}
-              </button>
-            );
-          })}
-      </div>
+
+      {loading && (
+        <div className="time-loading shimmer">슬롯을 불러오는 중…</div>
+      )}
+
+      {!loading && breakfast.length > 0 && (
+        <div className="time-group">
+          <div className="eyebrow time-group-label">조식 · Breakfast</div>
+          <div className="time-grid">{breakfast.map(renderChip)}</div>
+        </div>
+      )}
+
+      {!loading && dinner.length > 0 && (
+        <div className="time-group">
+          <div className="eyebrow time-group-label">저녁 · Dinner</div>
+          <div className="time-grid">{dinner.map(renderChip)}</div>
+        </div>
+      )}
     </div>
   );
 }

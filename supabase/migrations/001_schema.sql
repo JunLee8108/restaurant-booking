@@ -49,13 +49,18 @@ create table if not exists public.time_slots (
   unique (day_of_week, slot_time)
 );
 
--- 기본 슬롯 시드 (매일 18:00 ~ 20:30 30분 간격, 휴무 없음)
+-- 기본 슬롯 시드 (매일, 조식 07:00~09:30 + 저녁 18:00~21:30 30분 간격, 휴무 없음)
 insert into public.time_slots (day_of_week, slot_time, capacity)
 select dow, t, 20
 from generate_series(0, 6) dow
 cross join (values
+  -- 조식
+  ('07:00'::time), ('07:30'::time), ('08:00'::time),
+  ('08:30'::time), ('09:00'::time), ('09:30'::time),
+  -- 저녁
   ('18:00'::time), ('18:30'::time), ('19:00'::time),
-  ('19:30'::time), ('20:00'::time), ('20:30'::time)
+  ('19:30'::time), ('20:00'::time), ('20:30'::time),
+  ('21:00'::time), ('21:30'::time)
 ) s(t)
 on conflict do nothing;
 

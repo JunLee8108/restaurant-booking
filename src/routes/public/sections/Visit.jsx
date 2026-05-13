@@ -19,7 +19,7 @@ export default function Visit() {
             </Reveal>
             <Reveal delay={120}>
               <h2 className="section-title left">
-                다녀가시는 <span className="italic">길.</span>
+                오시는 <span className="italic">길.</span>
               </h2>
             </Reveal>
             <Reveal delay={240}>
@@ -44,7 +44,7 @@ export default function Visit() {
                   사전 단체 예약 시 운영
                   <br />
                   <strong className="visit-meal">저녁</strong>
-                  매일 18:00 – 22:00 (마지막 입장 20:30)
+                  매일 18:00 – 22:00 (마지막 입장 21:30)
                 </p>
               </div>
               <div className="visit-row">
