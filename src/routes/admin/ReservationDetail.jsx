@@ -39,7 +39,12 @@ export default function ReservationDetail() {
     setSaving(false);
   };
 
-  if (loading) return <div className="page"><div className="empty">불러오는 중…</div></div>;
+  if (loading)
+    return (
+      <div className="page">
+        <div className="empty">불러오는 중…</div>
+      </div>
+    );
   if (!r)
     return (
       <div className="page">
@@ -58,7 +63,6 @@ export default function ReservationDetail() {
 
       <header className="page-head">
         <div>
-          <div className="eyebrow">예약 상세</div>
           <h1 className="page-title">{r.customer_name}</h1>
         </div>
         <span className={`badge ${STATUS_META[r.status].tone} lg`}>
@@ -77,11 +81,7 @@ export default function ReservationDetail() {
           <DRow label="시간" value={fmtTime(r.reservation_time)} />
           <DRow label="인원" value={`${r.party_size}명`} />
           <DRow label="좌석" value={seatingLabel(r.seating)} />
-          <DRow
-            label="요청"
-            value={r.special_requests || "—"}
-            multiline
-          />
+          <DRow label="요청" value={r.special_requests || "—"} multiline />
         </div>
 
         <div className="panel">
@@ -156,9 +156,11 @@ function DRow({ label, value, multiline }) {
 }
 
 function seatingLabel(v) {
-  return {
-    dining_room: "다이닝 룸",
-    chefs_counter: "셰프스 카운터",
-    private_salon: "프라이빗 살롱",
-  }[v] || v;
+  return (
+    {
+      dining_room: "다이닝 룸",
+      chefs_counter: "셰프스 카운터",
+      private_salon: "프라이빗 살롱",
+    }[v] || v
+  );
 }
