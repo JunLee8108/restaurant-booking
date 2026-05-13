@@ -30,16 +30,21 @@ export default function Visit() {
               <div className="visit-row">
                 <div className="eyebrow">주소</div>
                 <p>
-                  서울특별시 강남구 도산대로 99길 12<br />
-                  La Stella, 2F
+                  경기도 의정부시 장곡로 22 (장암동)<br />
+                  아일랜드 캐슬 리조트 건물 2F
                 </p>
               </div>
               <div className="visit-row">
                 <div className="eyebrow">영업 시간</div>
                 <p>
-                  화 – 일 · 18:00 – 22:00 (마지막 입장 20:30)
+                  <strong className="visit-meal">조식</strong>
+                  매일 07:00 – 10:00 · American Buffet
                   <br />
-                  월요일 정기 휴무
+                  <strong className="visit-meal">중식</strong>
+                  사전 단체 예약 시 운영
+                  <br />
+                  <strong className="visit-meal">저녁</strong>
+                  매일 18:00 – 22:00 (마지막 입장 20:30)
                 </p>
               </div>
               <div className="visit-row">

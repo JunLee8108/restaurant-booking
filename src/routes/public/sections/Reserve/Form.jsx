@@ -276,7 +276,7 @@ function DateStep({ maxDate, value, onChange }) {
       <div className="step-head">
         <div className="eyebrow">Step 01</div>
         <h3>방문하실 날짜를 선택해주세요.</h3>
-        <p className="step-hint">월요일은 정기 휴무이며, 최대 45일 이내까지 예약 가능합니다.</p>
+        <p className="step-hint">최대 45일 이내까지 예약 가능합니다.</p>
       </div>
       <MonthCalendar
         value={value}
