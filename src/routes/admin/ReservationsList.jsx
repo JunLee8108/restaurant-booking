@@ -67,9 +67,15 @@ export default function ReservationsList() {
         </div>
       </div>
 
-      {loading && <div className="empty">불러오는 중…</div>}
+      {loading && (
+        <section className="panel">
+          <div className="empty">불러오는 중…</div>
+        </section>
+      )}
       {!loading && rows.length === 0 && (
-        <div className="empty">조건에 맞는 예약이 없습니다.</div>
+        <section className="panel">
+          <div className="empty">조건에 맞는 예약이 없습니다.</div>
+        </section>
       )}
 
       {!loading &&
@@ -118,7 +124,7 @@ export default function ReservationsList() {
                           to={`/admin/reservations/${r.id}`}
                           className="btn ghost sm"
                         >
-                          상세
+                          상세보기
                         </Link>
                       </td>
                     </tr>

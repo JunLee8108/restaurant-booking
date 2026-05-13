@@ -106,7 +106,7 @@ export default function Dashboard() {
                       to={`/admin/reservations/${r.id}`}
                       className="btn ghost sm"
                     >
-                      상세
+                      상세보기
                     </Link>
                   </td>
                 </tr>
