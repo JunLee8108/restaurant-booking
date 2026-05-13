@@ -55,7 +55,7 @@ export default function Reservation() {
     if (!shellRef.current) return;
     const top =
       shellRef.current.getBoundingClientRect().top + window.scrollY - 100;
-    window.scrollTo({ top, behavior: "smooth" });
+    window.scrollTo({ top, behavior: "instant" });
   }, [step, result?.ok]);
 
   const {
@@ -64,6 +64,7 @@ export default function Reservation() {
     formState: { errors },
     getValues,
     reset,
+    trigger,
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onBlur",
@@ -99,7 +100,14 @@ export default function Reservation() {
     return true;
   };
 
-  const next = () => setStep((s) => Math.min(STEPS.length - 1, s + 1));
+  const next = async () => {
+    // Step 04 (Details): 이름/이메일/전화 검증 통과해야 다음
+    if (step === 4) {
+      const ok = await trigger(["customer_name", "email", "phone"]);
+      if (!ok) return;
+    }
+    setStep((s) => Math.min(STEPS.length - 1, s + 1));
+  };
   const prev = () => setStep((s) => Math.max(0, s - 1));
 
   const onConfirm = async (values) => {
@@ -189,21 +197,6 @@ export default function Reservation() {
 
   return (
     <div className="res-shell" ref={shellRef}>
-      {/* Stepper */}
-      <ol className="stepper" aria-label="예약 단계">
-        {STEPS.map((s, i) => (
-          <li
-            key={s.key}
-            className={`step ${i === step ? "current" : ""} ${
-              i < step ? "done" : ""
-            }`}
-          >
-            <span className="step-num">{String(i + 1).padStart(2, "0")}</span>
-            <span className="step-label">{s.label}</span>
-          </li>
-        ))}
-      </ol>
-
       <div className="res-stage">
         {step === 0 && (
           <DateStep
