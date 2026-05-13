@@ -54,6 +54,9 @@ export default function AdminLayout() {
               데모 모드 — Supabase 미연결
             </div>
           )}
+          <Link to="/" className="admin-home-link">
+            ← 홈페이지
+          </Link>
           <button className="btn ghost" onClick={onSignOut}>
             로그아웃
           </button>

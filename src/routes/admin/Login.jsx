@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { getSession, signIn } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabase";
 import { useNoIndex } from "../../lib/useNoIndex";
@@ -35,6 +35,9 @@ export default function Login() {
   return (
     <div className="login-page">
       <div className="login-card">
+        <Link to="/" className="login-home">
+          ← 홈페이지
+        </Link>
         <div className="login-brand">
           <div className="brand-mark big" style={{ color: "var(--gold)" }}>
             ★ ★ ★
