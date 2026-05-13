@@ -74,6 +74,7 @@ export default function AdminLayout() {
                 대시보드
               </NavLink>
               <NavLink to="/admin/reservations">예약 관리</NavLink>
+              <NavLink to="/admin/stats">통계</NavLink>
             </nav>
 
             <div className="admin-foot">
