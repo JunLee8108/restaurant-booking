@@ -423,10 +423,6 @@
   flex-wrap: wrap;
   align-items: center;
 }
-.search {
-  flex: 1;
-  max-width: 360px;
-}
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -614,20 +610,17 @@
 .month-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
+  justify-content: flex-start;
+  gap: 18px;
+  padding: 0;
 }
 .month-nav-label {
   font-family: var(--display);
-  font-size: 24px;
+  font-size: 22px;
   color: var(--ink);
   display: inline-flex;
   align-items: baseline;
-  gap: 14px;
-  min-width: 200px;
-  justify-content: center;
+  gap: 12px;
 }
 .month-nav-count {
   font-family: var(--sans);
@@ -635,6 +628,16 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+/* page-head 우측 검색 */
+.page-head-search {
+  min-width: 240px;
+  max-width: 320px;
+  flex: 0 0 auto;
+}
+.page-head-search .field-input {
+  width: 100%;
 }
 
 /* ===== Pagination ===== */
@@ -709,17 +712,25 @@
 
 /* ===== Mobile card layout for admin tables ===== */
 @media (max-width: 700px) {
-  .panel {
-    padding: 22px;
+  /* 헤더 / 툴바 모바일 스택 */
+  .page-head {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .panel-head {
-    margin-bottom: 14px;
-    padding-bottom: 12px;
+  .page-head-search {
+    min-width: 0;
+    max-width: none;
   }
-  .panel-head h2,
-  .panel-h {
-    font-size: 22px;
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
   }
+  .month-nav { justify-content: flex-start; }
+
+  .panel { padding: 22px; }
+  .panel-head { margin-bottom: 14px; padding-bottom: 12px; }
+  .panel-head h2, .panel-h { font-size: 22px; }
 
   .table thead {
     display: none;
