@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -43,6 +43,20 @@ export default function Reservation() {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
+  const shellRef = useRef(null);
+  const firstRenderRef = useRef(true);
+
+  // 스텝/결과 전환 시 폼 상단으로 부드럽게 스크롤 (첫 마운트는 제외)
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    if (!shellRef.current) return;
+    const top =
+      shellRef.current.getBoundingClientRect().top + window.scrollY - 100;
+    window.scrollTo({ top, behavior: "smooth" });
+  }, [step, result?.ok]);
 
   const {
     register,
@@ -121,8 +135,9 @@ export default function Reservation() {
 
   if (result?.ok) {
     return (
-      <Reveal>
-        <div className="confirm-card">
+      <div ref={shellRef}>
+        <Reveal>
+          <div className="confirm-card">
           <div className="confirm-stars">★ ★ ★</div>
           <div className="eyebrow">예약 접수 완료</div>
           <h2 className="confirm-title">
@@ -167,20 +182,13 @@ export default function Reservation() {
             새 예약 만들기
           </button>
         </div>
-      </Reveal>
+        </Reveal>
+      </div>
     );
   }
 
   return (
-    <div className="res-shell">
-      <header className="res-header">
-        <div className="eyebrow">예약</div>
-        <h1 className="res-title">
-          테이블을 <span className="italic">예약하세요.</span>
-        </h1>
-        <div className="rule center res-header-rule" />
-      </header>
-
+    <div className="res-shell" ref={shellRef}>
       {/* Stepper */}
       <ol className="stepper" aria-label="예약 단계">
         {STEPS.map((s, i) => (

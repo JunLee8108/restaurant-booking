@@ -159,30 +159,6 @@
   .res-shell { padding: 36px 22px 28px; }
 }
 
-/* Form header (replaces removed reserve-hero) */
-.res-header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-.res-header .eyebrow {
-  display: block;
-  margin-bottom: 14px;
-}
-.res-title {
-  font-family: var(--display);
-  font-size: clamp(34px, 4vw, 46px);
-  font-weight: 300;
-  line-height: 1.1;
-  margin: 0 0 22px;
-  color: var(--ink);
-}
-.res-title .italic {
-  font-style: italic;
-  color: var(--gold-deep);
-}
-.res-header-rule {
-  margin: 0 auto;
-}
 
 /* Stepper */
 .stepper {
