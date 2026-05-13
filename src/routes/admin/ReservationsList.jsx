@@ -89,39 +89,38 @@ export default function ReservationsList() {
           <div className="eyebrow">Reservations</div>
           <h1 className="page-title">예약 관리</h1>
         </div>
-      </header>
-
-      <div className="month-nav">
-        <button
-          type="button"
-          className="cal-nav"
-          onClick={() => setViewMonth((m) => subMonths(m, 1))}
-          aria-label="이전 달"
-        >
-          ‹
-        </button>
-        <div className="month-nav-label">
-          {monthLabel}
-          <span className="month-nav-count">{totalCount}건</span>
-        </div>
-        <button
-          type="button"
-          className="cal-nav"
-          onClick={() => setViewMonth((m) => addMonths(m, 1))}
-          aria-label="다음 달"
-        >
-          ›
-        </button>
-      </div>
-
-      <div className="toolbar">
-        <div className="search">
+        <div className="page-head-search">
           <input
             placeholder="이름, 이메일, 예약 번호 검색"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="field-input"
           />
+        </div>
+      </header>
+
+      <div className="toolbar">
+        <div className="month-nav">
+          <button
+            type="button"
+            className="cal-nav"
+            onClick={() => setViewMonth((m) => subMonths(m, 1))}
+            aria-label="이전 달"
+          >
+            ‹
+          </button>
+          <div className="month-nav-label">
+            {monthLabel}
+            <span className="month-nav-count">{totalCount}건</span>
+          </div>
+          <button
+            type="button"
+            className="cal-nav"
+            onClick={() => setViewMonth((m) => addMonths(m, 1))}
+            aria-label="다음 달"
+          >
+            ›
+          </button>
         </div>
         <div className="filters">
           {STATUSES.map((s) => (
