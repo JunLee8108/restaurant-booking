@@ -30,27 +30,22 @@ export default function Hero() {
         </h1>
         <div className="hero-rule" />
         <p className="hero-sub">
-          계절의 정수에 바치는 헌사<br />
+          계절의 정수에 바치는 헌사
+          <br />
           이탈리아 미식의 조용한 우아함
         </p>
         <div className="hero-meta">
-          <span>Three Michelin Stars</span>
+          <span>Uijeongbu</span>
           <span className="dot">·</span>
-          <span>Est. 2014</span>
+          <span>Island Castle</span>
           <span className="dot">·</span>
-          <span>Seoul</span>
+          <span>Buffet</span>
         </div>
       </div>
 
       <Link to="/reserve" className="hero-cta-bottom">
         <span>예약하기</span>
-        <svg
-          width="14"
-          height="10"
-          viewBox="0 0 14 10"
-          fill="none"
-          aria-hidden
-        >
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden>
           <path
             d="M1 5h12m0 0L9 1m4 4L9 9"
             stroke="currentColor"

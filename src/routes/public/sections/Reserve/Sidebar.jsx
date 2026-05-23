@@ -44,9 +44,7 @@ export default function Sidebar({ selectedDate }) {
         <div className="side-mark">★ ★ ★</div>
       </Reveal>
       <Reveal delay={80}>
-        <h2 className="side-title">
-          성수기 <span className="italic">특선 부페</span>
-        </h2>
+        <h2 className="side-title">La Stella</h2>
         <div className="side-sub">Peak Season Buffet</div>
       </Reveal>
 
@@ -56,7 +54,7 @@ export default function Sidebar({ selectedDate }) {
 
       <Reveal delay={220} className="side-block">
         <div className="eyebrow">부페</div>
-        <p>제철 식재로 차려내는 성수기 한정 부페. 1인 기준 요금 안내.</p>
+        <p>제철 식재로 차려내는 성수기 한정 부페.</p>
       </Reveal>
 
       <Reveal delay={300} className="side-block">
@@ -77,9 +75,7 @@ export default function Sidebar({ selectedDate }) {
             className={`price-tier ${currentTier === "early" ? "active" : ""}`}
           >
             <div className="price-tier-head">
-              <span className="tier-tag">
-                예약일의 {cutoffLabel} 전 예약
-              </span>
+              <span className="tier-tag">예약일의 {cutoffLabel} 전 예약</span>
               <span
                 className="tier-now"
                 data-visible={currentTier === "early"}
@@ -88,7 +84,9 @@ export default function Sidebar({ selectedDate }) {
                 지금 적용
               </span>
             </div>
-            <div className="price-tier-value">{won(pricing.price_early_bird)}</div>
+            <div className="price-tier-value">
+              {won(pricing.price_early_bird)}
+            </div>
           </div>
 
           <div
@@ -96,7 +94,8 @@ export default function Sidebar({ selectedDate }) {
           >
             <div className="price-tier-head">
               <span className="tier-tag">
-                예약일의 {cutoffLabel} 이후 예약 ({pricing.late_discount_pct}% 할인)
+                예약일의 {cutoffLabel} 이후 예약 ({pricing.late_discount_pct}%
+                할인)
               </span>
               <span
                 className="tier-now"
@@ -125,7 +124,6 @@ export default function Sidebar({ selectedDate }) {
         <ul className="side-list">
           <li>예약은 매월 1일 다음 달까지 오픈됩니다.</li>
           <li>변경 및 취소는 방문 24시간 전까지 가능합니다.</li>
-          <li>드레스 코드: 스마트 캐주얼.</li>
         </ul>
       </Reveal>
 
@@ -133,7 +131,7 @@ export default function Sidebar({ selectedDate }) {
         <p>
           "음식이 아닌, <span className="italic">시간</span>을 대접합니다."
         </p>
-        <div className="side-sign">— Marco Conti, Executive Chef</div>
+        <div className="side-sign">— 이종현, Executive Chef</div>
       </Reveal>
     </aside>
   );
