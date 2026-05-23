@@ -1,50 +1,19 @@
 import { supabase, isSupabaseConfigured } from "./supabase";
 
 /**
- * 영업 정책 (Supabase 미연결 시에도 동작하는 클라이언트 기본값)
- * - 영업일: 매일 (휴무 없음)
- * - 조식 슬롯: 07:00 ~ 09:30 (30분 간격)
- * - 저녁 슬롯: 18:00 ~ 21:30 (30분 간격)
- * - 슬롯당 capacity: 20
+ * 영업 정책
+ * - 휴무 없음
+ * - 인원: 성인 + 소인 ≤ 15 (유아 36개월 미만 무료, 소인 13세 미만)
  */
-export const CLOSED_DAYS = []; // 휴무일 없음
-export const DEFAULT_SLOTS = [
-  // 조식
-  "07:00",
-  "07:30",
-  "08:00",
-  "08:30",
-  "09:00",
-  "09:30",
-  // 저녁
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-];
-export const DEFAULT_CAPACITY = 20;
+export const CLOSED_DAYS = [];
+export const MAX_PARTY = 15;
 
-export const SEATING = [
-  {
-    value: "dining_room",
-    label: "다이닝 룸",
-    desc: "주 다이닝 공간 · 셰프의 코스 메뉴",
-  },
-  {
-    value: "chefs_counter",
-    label: "셰프스 카운터",
-    desc: "오픈 키친 카운터 · 8석 한정",
-  },
-  {
-    value: "private_salon",
-    label: "프라이빗 살롱",
-    desc: "독립된 룸 · 최소 4인부터",
-  },
-];
+export const DEFAULT_PRICING = {
+  price_regular: 43000,
+  price_early_bird: 30000,
+  late_discount_pct: 10,
+  early_cutoff_time: "12:00",
+};
 
 export const STATUS_META = {
   pending: { label: "대기", tone: "warning" },
@@ -67,40 +36,101 @@ export function isClosed(date) {
   return CLOSED_DAYS.includes(new Date(date).getDay());
 }
 
-/**
- * 특정 날짜의 시간 슬롯 가용 잔여 좌석을 반환.
- * Supabase 미연결 시 모든 슬롯을 capacity로 반환 (데모용).
- */
-export async function getAvailability(dateISO) {
-  if (!isSupabaseConfigured) {
-    return DEFAULT_SLOTS.map((t) => ({
-      slot_time: t,
-      remaining: DEFAULT_CAPACITY,
-    }));
+/* ---- 가격 ---- */
+
+const PRICING_KEY = "la_stella_demo_pricing";
+
+function readDemoPricing() {
+  try {
+    const raw = localStorage.getItem(PRICING_KEY);
+    return raw ? { ...DEFAULT_PRICING, ...JSON.parse(raw) } : { ...DEFAULT_PRICING };
+  } catch {
+    return { ...DEFAULT_PRICING };
   }
-  const { data, error } = await supabase.rpc("available_slots", {
-    p_date: dateISO,
-  });
-  if (error) {
-    console.error("[getAvailability]", error);
-    return DEFAULT_SLOTS.map((t) => ({
-      slot_time: t,
-      remaining: DEFAULT_CAPACITY,
-    }));
-  }
-  return data ?? [];
 }
+
+function writeDemoPricing(next) {
+  localStorage.setItem(PRICING_KEY, JSON.stringify(next));
+}
+
+export async function getPricing() {
+  if (!isSupabaseConfigured) return readDemoPricing();
+  const { data, error } = await supabase
+    .from("pricing_settings")
+    .select("price_regular,price_early_bird,late_discount_pct,early_cutoff_time")
+    .eq("id", 1)
+    .maybeSingle();
+  if (error || !data) return { ...DEFAULT_PRICING };
+  return data;
+}
+
+export async function updatePricing(patch) {
+  if (!isSupabaseConfigured) {
+    const next = { ...readDemoPricing(), ...patch };
+    writeDemoPricing(next);
+    return { data: next, error: null };
+  }
+  const { data, error } = await supabase
+    .from("pricing_settings")
+    .update(patch)
+    .eq("id", 1)
+    .select()
+    .single();
+  return { data, error };
+}
+
+/**
+ * 부페 단가 계산. now 가 cutoff(예: 12:00) 이전이면 얼리버드, 이후면 정가에 할인 적용.
+ */
+export function computeBuffetPrice(settings, now = new Date()) {
+  const cutoff = settings.early_cutoff_time || "12:00";
+  const [ch, cm] = cutoff.split(":").map(Number);
+  const cutoffDate = new Date(now);
+  cutoffDate.setHours(ch, cm, 0, 0);
+  if (now < cutoffDate) {
+    return {
+      tier: "early",
+      perAdult: settings.price_early_bird,
+    };
+  }
+  const discounted = Math.round(
+    settings.price_regular * (1 - settings.late_discount_pct / 100),
+  );
+  return {
+    tier: "late",
+    perAdult: discounted,
+  };
+}
+
+/* ---- 예약 ---- */
 
 export async function createReservation(payload) {
   const confirmation_code = generateConfirmationCode();
-  const row = { ...payload, confirmation_code, status: "pending" };
+  const adults = Number(payload.adults) || 0;
+  const children = Number(payload.children) || 0;
+  const infants = Number(payload.infants) || 0;
+  const row = {
+    customer_name: payload.customer_name,
+    phone: payload.phone,
+    reservation_date: payload.reservation_date,
+    adults,
+    children,
+    infants,
+    party_size: adults + children,
+    special_requests: payload.special_requests ?? null,
+    confirmation_code,
+    status: "pending",
+  };
 
   if (!isSupabaseConfigured) {
-    // 데모 모드 — 로컬에 저장만 하고 코드 반환
     const local = JSON.parse(
       localStorage.getItem("la_stella_demo_reservations") || "[]",
     );
-    local.push({ ...row, id: crypto.randomUUID(), created_at: new Date().toISOString() });
+    local.push({
+      ...row,
+      id: crypto.randomUUID(),
+      created_at: new Date().toISOString(),
+    });
     localStorage.setItem(
       "la_stella_demo_reservations",
       JSON.stringify(local),
@@ -108,21 +138,13 @@ export async function createReservation(payload) {
     return { data: row, error: null, demo: true };
   }
 
-  // RLS 주의: .select() 를 붙이면 INSERT 후 행을 다시 읽기 위해
-  // SELECT 권한도 필요해짐. anon 손님은 SELECT 권한이 없으므로
-  // .insert() 만 호출하고 클라이언트가 들고 있는 row 를 그대로 반환.
   const { error } = await supabase.from("reservations").insert(row);
   return { data: row, error, demo: false };
 }
 
 /* ---- Admin ---- */
 
-export async function listReservations({
-  from,
-  to,
-  status,
-  search,
-} = {}) {
+export async function listReservations({ from, to, status, search } = {}) {
   if (!isSupabaseConfigured) {
     const local = JSON.parse(
       localStorage.getItem("la_stella_demo_reservations") || "[]",
@@ -133,14 +155,14 @@ export async function listReservations({
     .from("reservations")
     .select("*")
     .order("reservation_date", { ascending: true })
-    .order("reservation_time", { ascending: true });
+    .order("created_at", { ascending: true });
 
   if (from) q = q.gte("reservation_date", from);
   if (to) q = q.lte("reservation_date", to);
   if (status && status !== "all") q = q.eq("status", status);
   if (search) {
     q = q.or(
-      `customer_name.ilike.%${search}%,email.ilike.%${search}%,confirmation_code.ilike.%${search}%`,
+      `customer_name.ilike.%${search}%,phone.ilike.%${search}%,confirmation_code.ilike.%${search}%`,
     );
   }
   const { data, error } = await q;

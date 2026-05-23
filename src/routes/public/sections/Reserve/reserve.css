@@ -85,25 +85,57 @@
   color: var(--ink-2);
   font-weight: 300;
 }
-.side-price {
+.price-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.price-original {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--muted);
+}
+.price-original .strike {
+  text-decoration: line-through;
+  text-decoration-color: var(--muted);
+}
+.price-unit {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.price-tier {
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  background: #fff;
+  transition: border-color var(--t-med) var(--ease);
+}
+.price-tier.active {
+  border-color: var(--gold);
+  background: var(--bone);
+}
+.price-tier-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.tier-now {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+.price-tier-value {
   font-family: var(--display) !important;
-  font-size: 30px !important;
+  font-size: 26px !important;
   font-weight: 400 !important;
   color: var(--ink) !important;
   line-height: 1 !important;
-  margin: 0 0 6px;
-}
-.side-unit {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  color: var(--muted);
-}
-.side-fine {
-  font-size: 12px !important;
-  color: var(--muted) !important;
-  line-height: 1.7 !important;
 }
 .side-list {
   margin: 0;
@@ -231,68 +263,78 @@
   padding: 40px 0;
 }
 
-/* Party grid */
-.party-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+/* Party counter */
+.party-stack {
+  display: flex;
+  flex-direction: column;
   max-width: 520px;
   margin: 0 auto;
+  border-top: 1px solid var(--line-soft);
 }
-.chip.party {
-  padding: 20px;
+.counter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--line-soft);
+  gap: 24px;
 }
-@media (max-width: 500px) {
-  .party-grid { grid-template-columns: repeat(2, 1fr); }
+.counter-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-
-/* Seat grid */
-.seat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+.counter-label {
+  font-family: var(--display);
+  font-size: 20px;
+  color: var(--ink);
 }
-.seat-card {
-  text-align: left;
-  border: 1px solid var(--line-ink);
-  padding: 26px 22px;
-  background: #fff;
+.counter-sub {
   font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.counter-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.counter-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line-ink);
+  background: #fff;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink);
   cursor: pointer;
   transition: all var(--t-med) var(--ease);
 }
-.seat-card:hover:not(:disabled) {
+.counter-btn:hover:not(:disabled) {
   border-color: var(--gold);
+  color: var(--gold-deep);
 }
-.seat-card.selected {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-.seat-title {
-  font-family: var(--display);
-  font-size: 22px;
-  margin-bottom: 6px;
-}
-.seat-desc {
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--muted);
-}
-.seat-card.selected .seat-desc { color: var(--gold-soft); }
-.seat-note {
-  margin-top: 10px;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--danger);
-}
-.seat-card:disabled {
-  opacity: 0.45;
+.counter-btn:disabled {
+  opacity: 0.35;
   cursor: not-allowed;
 }
-@media (max-width: 800px) {
-  .seat-grid { grid-template-columns: 1fr; }
+.counter-value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 18px;
+  color: var(--ink);
+}
+.party-warn {
+  max-width: 520px;
+  margin: 18px auto 0;
+  padding: 10px 14px;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  font-family: var(--sans);
+  font-size: 13px;
+  text-align: center;
 }
 
 /* Details */

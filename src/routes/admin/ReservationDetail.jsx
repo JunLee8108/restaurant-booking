@@ -5,7 +5,7 @@ import {
   getReservation,
   updateReservation,
 } from "../../lib/reservations";
-import { fmtDate, fmtTime } from "../../lib/utils";
+import { fmtDate } from "../../lib/utils";
 import "./admin.css";
 
 const FLOW = ["pending", "confirmed", "seated", "completed"];
@@ -78,15 +78,15 @@ export default function ReservationDetail() {
             value={<code className="conf-code">{r.confirmation_code}</code>}
           />
           <DRow label="날짜" value={fmtDate(r.reservation_date)} />
-          <DRow label="시간" value={fmtTime(r.reservation_time)} />
-          <DRow label="인원" value={`${r.party_size}명`} />
-          <DRow label="좌석" value={seatingLabel(r.seating)} />
+          <DRow label="성인" value={`${r.adults ?? 0}명`} />
+          <DRow label="소인" value={`${r.children ?? 0}명`} />
+          <DRow label="유아 (무료)" value={`${r.infants ?? 0}명`} />
+          <DRow label="합계 (성인+소인)" value={`${r.party_size ?? 0}명`} />
         </div>
 
         <div className="panel">
           <h2 className="panel-h">고객 정보</h2>
           <DRow label="이름" value={r.customer_name} />
-          <DRow label="이메일" value={r.email} />
           <DRow label="전화" value={r.phone} />
           <DRow label="요청" value={r.special_requests || "—"} multiline />
           <DRow
@@ -152,15 +152,5 @@ function DRow({ label, value, multiline }) {
       <div className="d-label">{label}</div>
       <div className="d-value">{value}</div>
     </div>
-  );
-}
-
-function seatingLabel(v) {
-  return (
-    {
-      dining_room: "다이닝 룸",
-      chefs_counter: "셰프스 카운터",
-      private_salon: "프라이빗 살롱",
-    }[v] || v
   );
 }

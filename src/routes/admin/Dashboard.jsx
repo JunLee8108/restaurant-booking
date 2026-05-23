@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { listReservations, STATUS_META } from "../../lib/reservations";
-import { fmtDate, fmtTime, toISO } from "../../lib/utils";
+import { fmtDate, toISO } from "../../lib/utils";
 import "./admin.css";
 
 export default function Dashboard() {
@@ -21,11 +21,15 @@ export default function Dashboard() {
     const todays = rows.filter((r) => r.reservation_date === today);
     const upcoming = rows.filter(
       (r) =>
-        r.reservation_date >= today && !["cancelled", "no_show"].includes(r.status),
+        r.reservation_date >= today &&
+        !["cancelled", "no_show"].includes(r.status),
     );
     const pending = rows.filter((r) => r.status === "pending");
     const todayGuests = todays.reduce(
-      (sum, r) => (["cancelled", "no_show"].includes(r.status) ? sum : sum + r.party_size),
+      (sum, r) =>
+        ["cancelled", "no_show"].includes(r.status)
+          ? sum
+          : sum + (r.party_size || 0),
       0,
     );
     return {
@@ -36,9 +40,7 @@ export default function Dashboard() {
     };
   }, [rows, today]);
 
-  const todays = rows
-    .filter((r) => r.reservation_date === today)
-    .sort((a, b) => a.reservation_time.localeCompare(b.reservation_time));
+  const todays = rows.filter((r) => r.reservation_date === today);
 
   return (
     <div className="page">
@@ -78,10 +80,9 @@ export default function Dashboard() {
           <table className="table">
             <thead>
               <tr>
-                <th>시간</th>
                 <th>예약자</th>
                 <th>인원</th>
-                <th>좌석</th>
+                <th>전화</th>
                 <th>상태</th>
                 <th />
               </tr>
@@ -89,13 +90,14 @@ export default function Dashboard() {
             <tbody>
               {todays.map((r) => (
                 <tr key={r.id}>
-                  <td className="td-time mono">{fmtTime(r.reservation_time)}</td>
                   <td className="td-customer">
                     <div className="cell-strong">{r.customer_name}</div>
-                    <div className="cell-sub">{r.email}</div>
+                    <div className="cell-sub mono small">
+                      {r.confirmation_code}
+                    </div>
                   </td>
-                  <td className="td-party">{r.party_size}명</td>
-                  <td className="td-seating">{seatingLabel(r.seating)}</td>
+                  <td className="td-party">{partySummary(r)}</td>
+                  <td className="td-seating mono small">{r.phone || "—"}</td>
                   <td className="td-status">
                     <span className={`badge ${STATUS_META[r.status].tone}`}>
                       {STATUS_META[r.status].label}
@@ -131,10 +133,10 @@ function Stat({ label, value, suffix, accent }) {
   );
 }
 
-function seatingLabel(v) {
-  return {
-    dining_room: "다이닝 룸",
-    chefs_counter: "셰프스 카운터",
-    private_salon: "프라이빗 살롱",
-  }[v] || v;
+function partySummary(r) {
+  const parts = [];
+  if (r.adults) parts.push(`성인 ${r.adults}`);
+  if (r.children) parts.push(`소인 ${r.children}`);
+  if (r.infants) parts.push(`유아 ${r.infants}`);
+  return parts.join(" · ") || `${r.party_size || 0}명`;
 }

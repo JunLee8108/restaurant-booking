@@ -9,7 +9,7 @@ import {
 } from "date-fns";
 import { ko } from "date-fns/locale";
 import { listReservations, STATUS_META } from "../../lib/reservations";
-import { fmtDateShort, fmtTime, toISO } from "../../lib/utils";
+import { fmtDateShort, toISO } from "../../lib/utils";
 import { useDebounce } from "../../lib/useDebounce";
 import "./admin.css";
 
@@ -48,7 +48,6 @@ export default function ReservationsList() {
     });
   }, [status, debouncedSearch, from, to]);
 
-  // 필터 바뀌면 첫 페이지로
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset paging on filter change
     setPage(1);
@@ -91,7 +90,7 @@ export default function ReservationsList() {
         </div>
         <div className="page-head-search">
           <input
-            placeholder="이름, 이메일, 예약 번호 검색"
+            placeholder="이름, 전화번호, 예약 번호 검색"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="field-input"
@@ -158,45 +157,40 @@ export default function ReservationsList() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>시간</th>
                   <th>예약자</th>
                   <th>인원</th>
-                  <th>좌석</th>
+                  <th>전화</th>
                   <th>예약 번호</th>
                   <th>상태</th>
                   <th />
                 </tr>
               </thead>
               <tbody>
-                {items
-                  .sort((a, b) =>
-                    a.reservation_time.localeCompare(b.reservation_time),
-                  )
-                  .map((r) => (
-                    <tr key={r.id}>
-                      <td className="td-time mono">{fmtTime(r.reservation_time)}</td>
-                      <td className="td-customer">
-                        <div className="cell-strong">{r.customer_name}</div>
-                        <div className="cell-sub">{r.email}</div>
-                      </td>
-                      <td className="td-party">{r.party_size}명</td>
-                      <td className="td-seating">{seatingLabel(r.seating)}</td>
-                      <td className="td-code mono small">{r.confirmation_code}</td>
-                      <td className="td-status">
-                        <span className={`badge ${STATUS_META[r.status].tone}`}>
-                          {STATUS_META[r.status].label}
-                        </span>
-                      </td>
-                      <td className="td-action">
-                        <Link
-                          to={`/admin/reservations/${r.id}`}
-                          className="btn ghost sm"
-                        >
-                          상세보기
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
+                {items.map((r) => (
+                  <tr key={r.id}>
+                    <td className="td-customer">
+                      <div className="cell-strong">{r.customer_name}</div>
+                    </td>
+                    <td className="td-party">{partySummary(r)}</td>
+                    <td className="td-seating mono small">{r.phone || "—"}</td>
+                    <td className="td-code mono small">
+                      {r.confirmation_code}
+                    </td>
+                    <td className="td-status">
+                      <span className={`badge ${STATUS_META[r.status].tone}`}>
+                        {STATUS_META[r.status].label}
+                      </span>
+                    </td>
+                    <td className="td-action">
+                      <Link
+                        to={`/admin/reservations/${r.id}`}
+                        className="btn ghost sm"
+                      >
+                        상세보기
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </section>
@@ -241,10 +235,10 @@ export default function ReservationsList() {
   );
 }
 
-function seatingLabel(v) {
-  return {
-    dining_room: "다이닝 룸",
-    chefs_counter: "셰프스 카운터",
-    private_salon: "프라이빗 살롱",
-  }[v] || v;
+function partySummary(r) {
+  const parts = [];
+  if (r.adults) parts.push(`성인 ${r.adults}`);
+  if (r.children) parts.push(`소인 ${r.children}`);
+  if (r.infants) parts.push(`유아 ${r.infants}`);
+  return parts.join(" · ") || `${r.party_size || 0}명`;
 }
