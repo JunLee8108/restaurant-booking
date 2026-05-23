@@ -80,14 +80,18 @@ export async function updatePricing(patch) {
 }
 
 /**
- * 부페 단가 계산. now 가 cutoff(예: 12:00) 이전이면 얼리버드, 이후면 정가에 할인 적용.
+ * 부페 단가 계산.
+ * - 기준: **예약일(reservationDate)의 cutoff(예: 12:00)**.
+ * - now < 예약일 cutoff → 얼리버드, 이후 → 정가에 할인.
+ * - reservationDate 미지정 시 오늘을 기준 날짜로 사용 (사이드바 기본 표시용).
  */
-export function computeBuffetPrice(settings, now = new Date()) {
+export function computeBuffetPrice(settings, reservationDate, now = new Date()) {
   const cutoff = settings.early_cutoff_time || "12:00";
   const [ch, cm] = cutoff.split(":").map(Number);
-  const cutoffDate = new Date(now);
-  cutoffDate.setHours(ch, cm, 0, 0);
-  if (now < cutoffDate) {
+  const refDate = reservationDate ? toLocalDate(reservationDate) : new Date(now);
+  const cutoffMoment = new Date(refDate);
+  cutoffMoment.setHours(ch, cm, 0, 0);
+  if (now < cutoffMoment) {
     return {
       tier: "early",
       perAdult: settings.price_early_bird,
@@ -100,6 +104,15 @@ export function computeBuffetPrice(settings, now = new Date()) {
     tier: "late",
     perAdult: discounted,
   };
+}
+
+function toLocalDate(d) {
+  if (d instanceof Date) return new Date(d);
+  if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+    const [y, m, day] = d.split("-").map(Number);
+    return new Date(y, m - 1, day);
+  }
+  return new Date(d);
 }
 
 /* ---- 예약 ---- */

@@ -18,18 +18,25 @@ function formatCutoff(time) {
   return `${period} ${hh}시`;
 }
 
-export default function Sidebar() {
+export default function Sidebar({ selectedDate }) {
   const [pricing, setPricing] = useState(DEFAULT_PRICING);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     getPricing().then(setPricing);
+  }, []);
+
+  // 1분마다 now 갱신 → cutoff 경계를 자연스럽게 넘어감
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
   }, []);
 
   const lateDiscounted = Math.round(
     pricing.price_regular * (1 - pricing.late_discount_pct / 100),
   );
   const cutoffLabel = formatCutoff(pricing.early_cutoff_time);
-  const currentTier = computeBuffetPrice(pricing).tier;
+  const currentTier = computeBuffetPrice(pricing, selectedDate, now).tier;
 
   return (
     <aside className="reserve-side">
@@ -60,24 +67,44 @@ export default function Sidebar() {
             <span className="price-unit"> / 1인</span>
           </div>
 
-          <div className={`price-tier ${currentTier === "early" ? "active" : ""}`}>
+          <p className="price-note">
+            예약 시점이 <strong>예약일(방문일)의 {cutoffLabel}</strong> 전이면
+            얼리버드, 이후면 정가에서 {pricing.late_discount_pct}% 할인이
+            적용됩니다.
+          </p>
+
+          <div
+            className={`price-tier ${currentTier === "early" ? "active" : ""}`}
+          >
             <div className="price-tier-head">
-              <span className="tier-tag">{cutoffLabel} 이전 예약</span>
-              {currentTier === "early" && (
-                <span className="tier-now">지금 적용</span>
-              )}
+              <span className="tier-tag">
+                예약일의 {cutoffLabel} 전 예약
+              </span>
+              <span
+                className="tier-now"
+                data-visible={currentTier === "early"}
+                aria-hidden={currentTier !== "early"}
+              >
+                지금 적용
+              </span>
             </div>
             <div className="price-tier-value">{won(pricing.price_early_bird)}</div>
           </div>
 
-          <div className={`price-tier ${currentTier === "late" ? "active" : ""}`}>
+          <div
+            className={`price-tier ${currentTier === "late" ? "active" : ""}`}
+          >
             <div className="price-tier-head">
               <span className="tier-tag">
-                {cutoffLabel} 이후 예약 ({pricing.late_discount_pct}% 할인)
+                예약일의 {cutoffLabel} 이후 예약 ({pricing.late_discount_pct}% 할인)
               </span>
-              {currentTier === "late" && (
-                <span className="tier-now">지금 적용</span>
-              )}
+              <span
+                className="tier-now"
+                data-visible={currentTier === "late"}
+                aria-hidden={currentTier !== "late"}
+              >
+                지금 적용
+              </span>
             </div>
             <div className="price-tier-value">{won(lateDiscounted)}</div>
           </div>
