@@ -3,24 +3,16 @@ import { Link } from "react-router";
 import { addMonths, format, startOfMonth, subMonths } from "date-fns";
 import { ko } from "date-fns/locale";
 import { listReservations, STATUS_META } from "../../lib/reservations";
-import { fmtDateShort, fmtTime } from "../../lib/utils";
+import { fmtDateShort } from "../../lib/utils";
 import {
   compareDelta,
   computeMetrics,
   computeRegulars,
   computeWatchlist,
-  countBySeating,
-  countBySlot,
   countByStatus,
   filterByMonth,
 } from "../../lib/stats";
 import "./admin.css";
-
-const SEAT_LABELS = {
-  dining_room: "다이닝 룸",
-  chefs_counter: "셰프스 카운터",
-  private_salon: "프라이빗 살롱",
-};
 
 export default function Stats() {
   const [rows, setRows] = useState([]);
@@ -43,8 +35,7 @@ export default function Stats() {
     [rows, year, monthIdx],
   );
   const lastRows = useMemo(
-    () =>
-      filterByMonth(rows, lastMonth.getFullYear(), lastMonth.getMonth()),
+    () => filterByMonth(rows, lastMonth.getFullYear(), lastMonth.getMonth()),
     [rows, lastMonth],
   );
 
@@ -52,9 +43,7 @@ export default function Stats() {
   const lastMetrics = useMemo(() => computeMetrics(lastRows), [lastRows]);
   const hasLast = lastRows.length > 0;
 
-  const slotCounts = useMemo(() => countBySlot(currentRows), [currentRows]);
   const statusCounts = useMemo(() => countByStatus(currentRows), [currentRows]);
-  const seatingCounts = useMemo(() => countBySeating(currentRows), [currentRows]);
   const regulars = useMemo(() => computeRegulars(rows, 10), [rows]);
   const watchlist = useMemo(
     () => computeWatchlist(currentRows, rows),
@@ -106,11 +95,7 @@ export default function Stats() {
       {!loading && currentRows.length > 0 && (
         <>
           <MetricCards metrics={metrics} last={hasLast ? lastMetrics : null} />
-          <SlotChart slotCounts={slotCounts} />
-          <div className="stats-row">
-            <StatusChart statusCounts={statusCounts} total={metrics.total} />
-            <SeatingChart seatingCounts={seatingCounts} total={metrics.total} />
-          </div>
+          <StatusChart statusCounts={statusCounts} total={metrics.total} />
           <RegularsPanel regulars={regulars} />
           <WatchlistPanel watchlist={watchlist} />
         </>
@@ -138,11 +123,11 @@ function MetricCards({ metrics, last }) {
         : null,
     },
     {
-      label: "평균 파티",
-      value: metrics.avgParty.toFixed(1),
+      label: "유아 동반",
+      value: metrics.totalInfants,
       suffix: "명",
       compare: last
-        ? compareDelta(metrics.avgParty, last.avgParty, false)
+        ? compareDelta(metrics.totalInfants, last.totalInfants, false)
         : null,
     },
     {
@@ -176,58 +161,6 @@ function MetricCards({ metrics, last }) {
   );
 }
 
-/* ---- Slot chart ---- */
-
-function SlotChart({ slotCounts }) {
-  const all = Array.from(slotCounts.entries()).sort(([a], [b]) =>
-    a.localeCompare(b),
-  );
-  if (all.length === 0) return null;
-  const breakfast = all.filter(([t]) => t < "12:00");
-  const dinner = all.filter(([t]) => t >= "12:00");
-  const max = Math.max(...all.map(([, c]) => c));
-  const minVal = Math.min(...all.map(([, c]) => c));
-
-  const row = ([t, c]) => {
-    const isMax = c === max;
-    const isMin = c === minVal && c < max;
-    return (
-      <div key={t} className="bar-row">
-        <span className="bar-label mono">{fmtTime(t)}</span>
-        <div className="bar-track">
-          <div
-            className="bar-fill"
-            style={{ width: `${(c / max) * 100}%` }}
-          />
-        </div>
-        <span className="bar-value">
-          {c}건
-          {isMax && <span className="bar-note">★ 인기</span>}
-          {isMin && <span className="bar-note muted">한산</span>}
-        </span>
-      </div>
-    );
-  };
-
-  return (
-    <section className="panel">
-      <h2 className="panel-h">시간대별 예약</h2>
-      {breakfast.length > 0 && (
-        <div className="bar-group">
-          <div className="eyebrow">조식 · Breakfast</div>
-          {breakfast.map(row)}
-        </div>
-      )}
-      {dinner.length > 0 && (
-        <div className="bar-group">
-          <div className="eyebrow">저녁 · Dinner</div>
-          {dinner.map(row)}
-        </div>
-      )}
-    </section>
-  );
-}
-
 /* ---- Status chart ---- */
 
 function StatusChart({ statusCounts, total }) {
@@ -241,40 +174,6 @@ function StatusChart({ statusCounts, total }) {
   return (
     <section className="panel">
       <h2 className="panel-h">상태 분포</h2>
-      <div className="bar-group">
-        {items.map((it) => (
-          <div key={it.key} className="bar-row">
-            <span className="bar-label">{it.label}</span>
-            <div className="bar-track">
-              <div
-                className="bar-fill"
-                style={{ width: `${(it.count / max) * 100}%` }}
-              />
-            </div>
-            <span className="bar-value">
-              {it.count}
-              <span className="bar-pct">{it.pct.toFixed(0)}%</span>
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ---- Seating chart ---- */
-
-function SeatingChart({ seatingCounts, total }) {
-  const items = Object.entries(SEAT_LABELS).map(([key, label]) => {
-    const count = seatingCounts.get(key) || 0;
-    const pct = total ? (count / total) * 100 : 0;
-    return { key, label, count, pct };
-  });
-  const max = Math.max(...items.map((i) => i.count), 1);
-
-  return (
-    <section className="panel">
-      <h2 className="panel-h">좌석 분포</h2>
       <div className="bar-group">
         {items.map((it) => (
           <div key={it.key} className="bar-row">
@@ -317,11 +216,13 @@ function RegularsPanel({ regulars }) {
           </thead>
           <tbody>
             {regulars.map((r, i) => (
-              <tr key={r.email}>
-                <td className="td-rank mono">{String(i + 1).padStart(2, "0")}</td>
+              <tr key={r.phone}>
+                <td className="td-rank mono">
+                  {String(i + 1).padStart(2, "0")}
+                </td>
                 <td className="td-customer">
                   <div className="cell-strong">{r.name}</div>
-                  <div className="cell-sub">{r.email}</div>
+                  <div className="cell-sub mono small">{r.phone}</div>
                 </td>
                 <td className="td-party">{r.count}회</td>
                 <td className="td-seating">{r.totalGuests}명</td>
@@ -349,7 +250,7 @@ function WatchlistPanel({ watchlist }) {
         <table className="table">
           <thead>
             <tr>
-              <th>일시</th>
+              <th>날짜</th>
               <th>예약자</th>
               <th>상태</th>
               <th />
@@ -359,12 +260,11 @@ function WatchlistPanel({ watchlist }) {
             {watchlist.map((r) => (
               <tr key={r.id}>
                 <td className="td-time mono">
-                  {fmtDateShort(r.reservation_date)} ·{" "}
-                  {fmtTime(r.reservation_time)}
+                  {fmtDateShort(r.reservation_date)}
                 </td>
                 <td className="td-customer">
                   <div className="cell-strong">{r.customer_name}</div>
-                  <div className="cell-sub">{r.email}</div>
+                  <div className="cell-sub mono small">{r.phone}</div>
                 </td>
                 <td className="td-status">
                   <span className={`badge ${STATUS_META[r.status].tone}`}>

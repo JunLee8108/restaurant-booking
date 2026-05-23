@@ -6,26 +6,22 @@ import { z } from "zod";
 import Reveal from "../../../../components/ui/Reveal";
 import MonthCalendar from "../../../../components/ui/MonthCalendar";
 import {
-  SEATING,
+  MAX_PARTY,
   createReservation,
-  getAvailability,
   isClosed,
 } from "../../../../lib/reservations";
-import { fmtDate, fmtTime, toISO } from "../../../../lib/utils";
+import { fmtDate, toISO } from "../../../../lib/utils";
 import "./reserve.css";
 
 const STEPS = [
   { key: "date", label: "날짜" },
-  { key: "time", label: "시간" },
   { key: "party", label: "인원" },
-  { key: "seating", label: "좌석" },
   { key: "details", label: "정보" },
   { key: "confirm", label: "확인" },
 ];
 
 const schema = z.object({
   customer_name: z.string().min(2, "이름을 입력해주세요"),
-  email: z.string().email("올바른 이메일을 입력해주세요"),
   phone: z
     .string()
     .min(9, "전화번호를 입력해주세요")
@@ -36,17 +32,14 @@ const schema = z.object({
 export default function Reservation() {
   const [step, setStep] = useState(0);
   const [date, setDate] = useState(null);
-  const [time, setTime] = useState(null);
-  const [party, setParty] = useState(2);
-  const [seating, setSeating] = useState(SEATING[0].value);
-  const [slots, setSlots] = useState([]);
-  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [infants, setInfants] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const shellRef = useRef(null);
   const firstRenderRef = useRef(true);
 
-  // 스텝/결과 전환 시 폼 상단으로 부드럽게 스크롤 (첫 마운트는 제외)
   useEffect(() => {
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
@@ -70,7 +63,6 @@ export default function Reservation() {
     mode: "onBlur",
     defaultValues: {
       customer_name: "",
-      email: "",
       phone: "",
       special_requests: "",
     },
@@ -82,28 +74,17 @@ export default function Reservation() {
     return d;
   }, []);
 
-  useEffect(() => {
-    if (!date) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- show loading on refetch
-    setLoadingSlots(true);
-    getAvailability(toISO(date)).then((s) => {
-      setSlots(s);
-      setLoadingSlots(false);
-    });
-  }, [date]);
+  const partyCount = adults + children;
 
   const canNext = () => {
     if (step === 0) return Boolean(date);
-    if (step === 1) return Boolean(time);
-    if (step === 2) return party > 0 && party <= 8;
-    if (step === 3) return Boolean(seating);
+    if (step === 1) return adults >= 1 && partyCount <= MAX_PARTY;
     return true;
   };
 
   const next = async () => {
-    // Step 04 (Details): 이름/이메일/전화 검증 통과해야 다음
-    if (step === 4) {
-      const ok = await trigger(["customer_name", "email", "phone"]);
+    if (step === 2) {
+      const ok = await trigger(["customer_name", "phone"]);
       if (!ok) return;
     }
     setStep((s) => Math.min(STEPS.length - 1, s + 1));
@@ -114,12 +95,11 @@ export default function Reservation() {
     setSubmitting(true);
     const payload = {
       customer_name: values.customer_name.trim(),
-      email: values.email.trim(),
       phone: values.phone.trim(),
       reservation_date: toISO(date),
-      reservation_time: time,
-      party_size: party,
-      seating,
+      adults,
+      children,
+      infants,
       special_requests: values.special_requests?.trim() || null,
     };
     const { data, error, demo } = await createReservation(payload);
@@ -134,9 +114,9 @@ export default function Reservation() {
   const restart = () => {
     setStep(0);
     setDate(null);
-    setTime(null);
-    setParty(2);
-    setSeating(SEATING[0].value);
+    setAdults(2);
+    setChildren(0);
+    setInfants(0);
     setResult(null);
     reset();
   };
@@ -146,50 +126,42 @@ export default function Reservation() {
       <div ref={shellRef}>
         <Reveal>
           <div className="confirm-card">
-          <div className="confirm-stars">★ ★ ★</div>
-          <div className="eyebrow">예약 접수 완료</div>
-          <h2 className="confirm-title">
-            감사합니다,<br />
-            <span className="italic">{result.payload.customer_name}</span> 님.
-          </h2>
-          <div className="rule center" />
-          <p className="confirm-msg">
-            예약이 접수되었습니다. 확인 메일이 곧 발송되며, 24시간 내 담당자가
-            컨펌 연락을 드립니다.
-          </p>
-          <div className="confirm-summary">
-            <div className="confirm-row">
-              <span>예약 번호</span>
-              <strong>{result.code}</strong>
+            <div className="confirm-stars">★ ★ ★</div>
+            <div className="eyebrow">예약 접수 완료</div>
+            <h2 className="confirm-title">
+              감사합니다,
+              <br />
+              <span className="italic">{result.payload.customer_name}</span> 님.
+            </h2>
+            <div className="rule center" />
+            <p className="confirm-msg">
+              예약이 접수되었습니다. 24시간 내 담당자가 전화로 컨펌 연락을
+              드립니다.
+            </p>
+            <div className="confirm-summary">
+              <div className="confirm-row">
+                <span>예약 번호</span>
+                <strong>{result.code}</strong>
+              </div>
+              <div className="confirm-row">
+                <span>날짜</span>
+                <strong>{fmtDate(result.payload.reservation_date)}</strong>
+              </div>
+              <div className="confirm-row">
+                <span>인원</span>
+                <strong>{summarizeParty(result.payload)}</strong>
+              </div>
             </div>
-            <div className="confirm-row">
-              <span>일시</span>
-              <strong>
-                {fmtDate(result.payload.reservation_date)} ·{" "}
-                {fmtTime(result.payload.reservation_time)}
-              </strong>
-            </div>
-            <div className="confirm-row">
-              <span>인원</span>
-              <strong>{result.payload.party_size}명</strong>
-            </div>
-            <div className="confirm-row">
-              <span>좌석</span>
-              <strong>
-                {SEATING.find((s) => s.value === result.payload.seating)?.label}
-              </strong>
-            </div>
+            {result.demo && (
+              <div className="confirm-demo">
+                데모 모드 — Supabase가 연결되지 않아 예약이 브라우저에 임시
+                저장되었습니다.
+              </div>
+            )}
+            <button className="btn gold" onClick={restart}>
+              새 예약 만들기
+            </button>
           </div>
-          {result.demo && (
-            <div className="confirm-demo">
-              데모 모드 — Supabase가 연결되지 않아 예약이 브라우저에 임시
-              저장되었습니다.
-            </div>
-          )}
-          <button className="btn gold" onClick={restart}>
-            새 예약 만들기
-          </button>
-        </div>
         </Reveal>
       </div>
     );
@@ -199,36 +171,25 @@ export default function Reservation() {
     <div className="res-shell" ref={shellRef}>
       <div className="res-stage">
         {step === 0 && (
-          <DateStep
-            maxDate={maxDate}
-            value={date}
-            onChange={(d) => {
-              setDate(d);
-              setTime(null);
-            }}
-          />
+          <DateStep maxDate={maxDate} value={date} onChange={setDate} />
         )}
         {step === 1 && (
-          <TimeStep
-            date={date}
-            slots={slots}
-            loading={loadingSlots}
-            party={party}
-            value={time}
-            onChange={setTime}
+          <PartyStep
+            adults={adults}
+            children={children}
+            infants={infants}
+            setAdults={setAdults}
+            setChildren={setChildren}
+            setInfants={setInfants}
           />
         )}
-        {step === 2 && <PartyStep value={party} onChange={setParty} />}
+        {step === 2 && <DetailsStep register={register} errors={errors} />}
         {step === 3 && (
-          <SeatingStep value={seating} onChange={setSeating} party={party} />
-        )}
-        {step === 4 && <DetailsStep register={register} errors={errors} />}
-        {step === 5 && (
           <ConfirmStep
             date={date}
-            time={time}
-            party={party}
-            seating={seating}
+            adults={adults}
+            childrenCount={children}
+            infants={infants}
             values={getValues()}
             error={result?.message}
           />
@@ -268,6 +229,16 @@ export default function Reservation() {
   );
 }
 
+/* ---- 헬퍼 ---- */
+
+function summarizeParty({ adults, children, infants }) {
+  const parts = [];
+  if (adults) parts.push(`성인 ${adults}`);
+  if (children) parts.push(`소인 ${children}`);
+  if (infants) parts.push(`유아 ${infants}`);
+  return parts.join(" · ") || "—";
+}
+
 /* ---- Steps ---- */
 
 function DateStep({ maxDate, value, onChange }) {
@@ -288,114 +259,90 @@ function DateStep({ maxDate, value, onChange }) {
   );
 }
 
-function TimeStep({ date, slots, loading, party, value, onChange }) {
-  const breakfast = slots.filter((s) => s.slot_time < "12:00");
-  const dinner = slots.filter((s) => s.slot_time >= "12:00");
-
-  const renderChip = (s) => {
-    const disabled = s.remaining < party;
-    const selected = value === s.slot_time;
-    return (
-      <button
-        key={s.slot_time}
-        type="button"
-        className={`chip ${selected ? "selected" : ""}`}
-        disabled={disabled}
-        onClick={() => onChange(s.slot_time)}
-      >
-        {fmtTime(s.slot_time)}
-      </button>
-    );
-  };
+function PartyStep({
+  adults,
+  children,
+  infants,
+  setAdults,
+  setChildren,
+  setInfants,
+}) {
+  const partyCount = adults + children;
+  const over = partyCount > MAX_PARTY;
 
   return (
     <div className="step-pane">
       <div className="step-head">
         <div className="eyebrow">Step 02</div>
-        {date && <div className="step-meta">{fmtDate(date)}</div>}
-        <h3>시간을 선택해주세요.</h3>
+        <h3>몇 분이 방문하시나요?</h3>
         <p className="step-hint">
-          조식 07:00 – 10:00 · 저녁 18:00 – 22:00 (마지막 입장 21:30)
+          성인 · 소인 합산 최대 {MAX_PARTY}명 · 유아(36개월 미만)는 무료
         </p>
       </div>
-
-      {loading && (
-        <div className="time-loading shimmer">슬롯을 불러오는 중…</div>
-      )}
-
-      {!loading && breakfast.length > 0 && (
-        <div className="time-group">
-          <div className="eyebrow time-group-label">조식 · Breakfast</div>
-          <div className="time-grid">{breakfast.map(renderChip)}</div>
-        </div>
-      )}
-
-      {!loading && dinner.length > 0 && (
-        <div className="time-group">
-          <div className="eyebrow time-group-label">저녁 · Dinner</div>
-          <div className="time-grid">{dinner.map(renderChip)}</div>
+      <div className="party-stack">
+        <Counter
+          label="성인"
+          sub="만 13세 이상"
+          value={adults}
+          min={1}
+          max={MAX_PARTY}
+          onChange={setAdults}
+        />
+        <Counter
+          label="소인"
+          sub="만 13세 미만"
+          value={children}
+          min={0}
+          max={MAX_PARTY - 1}
+          onChange={setChildren}
+        />
+        <Counter
+          label="유아"
+          sub="36개월 미만 · 무료"
+          value={infants}
+          min={0}
+          max={8}
+          onChange={setInfants}
+        />
+      </div>
+      {over && (
+        <div className="party-warn" role="alert">
+          성인 · 소인 합산이 최대 {MAX_PARTY}명을 초과했습니다.
         </div>
       )}
     </div>
   );
 }
 
-function PartyStep({ value, onChange }) {
+function Counter({ label, sub, value, min, max, onChange }) {
+  const dec = () => onChange(Math.max(min, value - 1));
+  const inc = () => onChange(Math.min(max, value + 1));
   return (
-    <div className="step-pane">
-      <div className="step-head">
-        <div className="eyebrow">Step 03</div>
-        <h3>몇 분이 방문하시나요?</h3>
-        <p className="step-hint">9명 이상은 컨시어지로 문의 부탁드립니다.</p>
+    <div className="counter-row">
+      <div className="counter-text">
+        <div className="counter-label">{label}</div>
+        <div className="counter-sub">{sub}</div>
       </div>
-      <div className="party-grid">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-          <button
-            key={n}
-            type="button"
-            className={`chip party ${value === n ? "selected" : ""}`}
-            onClick={() => onChange(n)}
-          >
-            {n}명
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SeatingStep({ value, onChange, party }) {
-  return (
-    <div className="step-pane">
-      <div className="step-head">
-        <div className="eyebrow">Step 04</div>
-        <h3>좌석을 선택해주세요.</h3>
-      </div>
-      <div className="seat-grid">
-        {SEATING.map((s) => {
-          const disabled =
-            (s.value === "private_salon" && party < 4) ||
-            (s.value === "chefs_counter" && party > 4);
-          return (
-            <button
-              key={s.value}
-              type="button"
-              className={`seat-card ${value === s.value ? "selected" : ""}`}
-              disabled={disabled}
-              onClick={() => onChange(s.value)}
-            >
-              <div className="seat-title">{s.label}</div>
-              <div className="seat-desc">{s.desc}</div>
-              {disabled && (
-                <div className="seat-note">
-                  {s.value === "private_salon"
-                    ? "최소 4인부터"
-                    : "최대 4인까지"}
-                </div>
-              )}
-            </button>
-          );
-        })}
+      <div className="counter-ctrl">
+        <button
+          type="button"
+          className="counter-btn"
+          onClick={dec}
+          disabled={value <= min}
+          aria-label={`${label} 감소`}
+        >
+          −
+        </button>
+        <span className="counter-value mono">{value}</span>
+        <button
+          type="button"
+          className="counter-btn"
+          onClick={inc}
+          disabled={value >= max}
+          aria-label={`${label} 증가`}
+        >
+          +
+        </button>
       </div>
     </div>
   );
@@ -405,7 +352,7 @@ function DetailsStep({ register, errors }) {
   return (
     <div className="step-pane">
       <div className="step-head">
-        <div className="eyebrow">Step 05</div>
+        <div className="eyebrow">Step 03</div>
         <h3>예약자 정보를 입력해주세요.</h3>
       </div>
       <div className="details-form">
@@ -418,18 +365,6 @@ function DetailsStep({ register, errors }) {
           />
           {errors.customer_name && (
             <div className="field-error">{errors.customer_name.message}</div>
-          )}
-        </div>
-        <div className="field">
-          <label className="field-label">이메일</label>
-          <input
-            className="field-input"
-            placeholder="name@example.com"
-            type="email"
-            {...register("email")}
-          />
-          {errors.email && (
-            <div className="field-error">{errors.email.message}</div>
           )}
         </div>
         <div className="field">
@@ -458,21 +393,24 @@ function DetailsStep({ register, errors }) {
   );
 }
 
-function ConfirmStep({ date, time, party, seating, values, error }) {
-  const seat = SEATING.find((s) => s.value === seating);
+function ConfirmStep({ date, adults, childrenCount, infants, values, error }) {
   return (
     <div className="step-pane">
       <div className="step-head">
-        <div className="eyebrow">Step 06</div>
+        <div className="eyebrow">Step 04</div>
         <h3>예약 내용을 확인해주세요.</h3>
       </div>
       <div className="summary">
         <Row label="날짜" value={date ? fmtDate(date) : "—"} />
-        <Row label="시간" value={fmtTime(time)} />
-        <Row label="인원" value={`${party}명`} />
-        <Row label="좌석" value={seat?.label || "—"} />
+        <Row
+          label="인원"
+          value={summarizeParty({
+            adults,
+            children: childrenCount,
+            infants,
+          })}
+        />
         <Row label="예약자" value={values.customer_name || "—"} />
-        <Row label="이메일" value={values.email || "—"} />
         <Row label="전화번호" value={values.phone || "—"} />
         {values.special_requests && (
           <Row label="요청" value={values.special_requests} />
@@ -481,7 +419,11 @@ function ConfirmStep({ date, time, party, seating, values, error }) {
       <p className="confirm-fine">
         ※ 예약 확정 후 변경/취소는 방문 24시간 전까지 가능합니다.
       </p>
-      {error && <div className="field-error" role="alert">{error}</div>}
+      {error && (
+        <div className="field-error" role="alert">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

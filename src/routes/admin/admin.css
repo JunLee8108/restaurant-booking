@@ -951,3 +951,34 @@
   .stats-page { gap: 24px; }
   .stats-row { gap: 16px; }
 }
+
+/* ===== Settings ===== */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 32px;
+  margin-bottom: 28px;
+}
+@media (max-width: 700px) {
+  .settings-grid { grid-template-columns: 1fr; }
+}
+.field-hint {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-top: 1px solid var(--line-soft);
+  padding-top: 20px;
+}
+.settings-saved {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
