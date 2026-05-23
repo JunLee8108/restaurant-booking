@@ -47,10 +47,8 @@ export default function QrCode() {
     <main className="qr-page">
       <section className="qr-frame">
         <div className="qr-mark">★ ★ ★</div>
-        <h1 className="qr-title">
-          성수기 <span className="italic">특선 부페</span>
-        </h1>
-        <div className="qr-sub">Scan to Reserve</div>
+        <h1 className="qr-title">La Stella</h1>
+        <div className="qr-sub">성수기 특선 부페</div>
 
         <div className="qr-rule" />
 
@@ -66,9 +64,6 @@ export default function QrCode() {
         </div>
 
         <p className="qr-instr">QR 코드를 스캔하여 예약하세요.</p>
-        <a className="qr-url mono" href={RESERVE_URL}>
-          {RESERVE_URL}
-        </a>
 
         <div className="qr-actions">
           <button type="button" className="btn solid" onClick={onDownload}>
