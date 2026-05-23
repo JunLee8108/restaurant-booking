@@ -29,9 +29,8 @@ const schema = z.object({
   special_requests: z.string().max(500).optional().or(z.literal("")),
 });
 
-export default function Reservation() {
+export default function Reservation({ date, onDateChange }) {
   const [step, setStep] = useState(0);
-  const [date, setDate] = useState(null);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
@@ -113,7 +112,7 @@ export default function Reservation() {
 
   const restart = () => {
     setStep(0);
-    setDate(null);
+    onDateChange(null);
     setAdults(2);
     setChildren(0);
     setInfants(0);
@@ -171,7 +170,7 @@ export default function Reservation() {
     <div className="res-shell" ref={shellRef}>
       <div className="res-stage">
         {step === 0 && (
-          <DateStep maxDate={maxDate} value={date} onChange={setDate} />
+          <DateStep maxDate={maxDate} value={date} onChange={onDateChange} />
         )}
         {step === 1 && (
           <PartyStep
