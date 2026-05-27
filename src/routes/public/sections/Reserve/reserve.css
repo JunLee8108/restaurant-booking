@@ -565,6 +565,21 @@
   margin: 0 0 24px;
   letter-spacing: 0.02em;
 }
+.confirm-lookup {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+.confirm-lookup:hover {
+  color: var(--gold-deep);
+  border-color: var(--gold);
+}
 @media (max-width: 600px) {
   .confirm-card { padding: 40px 24px; }
 }

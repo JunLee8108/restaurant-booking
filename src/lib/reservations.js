@@ -157,6 +157,36 @@ export async function createReservation(payload) {
   return { data: row, error, demo: false };
 }
 
+/**
+ * 고객 본인 예약 조회 — 예약번호 + 전화번호 일치 시 1건 반환.
+ */
+export async function lookupReservation(code, phone) {
+  const normCode = (code || "").trim().toUpperCase();
+  const normPhone = (phone || "").replace(/\D/g, "");
+  if (!normCode || !normPhone) {
+    return { data: null, error: { message: "예약번호와 전화번호를 입력해주세요." } };
+  }
+
+  if (!isSupabaseConfigured) {
+    const local = JSON.parse(
+      localStorage.getItem("la_stella_demo_reservations") || "[]",
+    );
+    const found = local.find(
+      (r) =>
+        (r.confirmation_code || "").trim().toUpperCase() === normCode &&
+        (r.phone || "").replace(/\D/g, "") === normPhone,
+    );
+    return { data: found ?? null, error: null, demo: true };
+  }
+
+  const { data, error } = await supabase.rpc("lookup_reservation", {
+    p_code: normCode,
+    p_phone: normPhone,
+  });
+  if (error) return { data: null, error };
+  return { data: data?.[0] ?? null, error: null };
+}
+
 /* ---- Admin ---- */
 
 export async function listReservations({ from, to, status, search } = {}) {
