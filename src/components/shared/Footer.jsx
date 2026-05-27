@@ -41,6 +41,10 @@ export default function Footer() {
           <div className="footer-bottom-right">
             <span>Crafted with reverence for seasonal Italian artistry.</span>
             <span className="footer-dot" aria-hidden>·</span>
+            <Link to="/lookup" className="footer-admin-link">
+              예약 조회
+            </Link>
+            <span className="footer-dot" aria-hidden>·</span>
             <Link to="/admin" className="footer-admin-link">
               관리자
             </Link>
