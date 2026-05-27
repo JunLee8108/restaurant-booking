@@ -252,7 +252,7 @@
 }
 .step-head h3 {
   font-family: var(--display);
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(19px, 5vw, 32px);
   font-weight: 400;
   margin: 6px 0 8px;
 }
@@ -261,42 +261,6 @@
   font-size: 14px;
   color: var(--muted);
   font-weight: 300;
-}
-
-/* Time grid */
-.time-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-  max-width: 560px;
-  margin: 0 auto;
-}
-.time-group {
-  max-width: 560px;
-  margin: 0 auto 32px;
-}
-.time-group:last-child { margin-bottom: 0; }
-.time-group-label {
-  display: block;
-  text-align: center;
-  margin: 0 0 18px;
-  padding-top: 8px;
-  border-top: 1px solid var(--line-soft);
-  padding-top: 18px;
-}
-.time-group:first-child .time-group-label {
-  border-top: none;
-  padding-top: 0;
-}
-.time-loading {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--muted);
-  font-family: var(--sans);
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 40px 0;
 }
 
 /* Party counter */
@@ -371,6 +335,18 @@
   font-family: var(--sans);
   font-size: 13px;
   text-align: center;
+}
+@media (max-width: 560px) {
+  .counter-row { padding: 18px 2px; }
+  .counter-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+  .counter-value {
+    min-width: 32px;
+    font-size: 19px;
+  }
 }
 
 /* Details */
@@ -498,9 +474,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-top: 48px;
   padding-top: 28px;
   border-top: 1px solid var(--line-soft);
+}
+@media (max-width: 560px) {
+  .res-nav {
+    margin-top: 36px;
+    padding-top: 22px;
+  }
+  /* 긴 한글 CTA 가 넘치지 않도록 자간/패딩 축소 + 줄바꿈 허용 */
+  .res-nav .btn {
+    padding: 16px 18px;
+    letter-spacing: 0.1em;
+    white-space: normal;
+  }
+  .res-nav .btn.solid {
+    flex: 1 1 auto;
+  }
+  .res-nav .btn.ghost {
+    flex: 0 0 auto;
+    padding: 12px 10px;
+  }
 }
 
 /* Confirm card */
