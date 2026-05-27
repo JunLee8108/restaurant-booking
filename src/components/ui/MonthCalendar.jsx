@@ -124,7 +124,6 @@ export default function MonthCalendar({
                 disabled && "is-disabled",
                 selected && "is-selected",
                 isTodayCell && "is-today",
-                closed && "is-closed",
                 dow === 0 && "is-sun",
                 dow === 6 && "is-sat",
               ]
@@ -136,7 +135,6 @@ export default function MonthCalendar({
               aria-label={format(d, "yyyy년 M월 d일 (E)", { locale: ko })}
             >
               <span className="cal-day">{d.getDate()}</span>
-              {closed && inMonth && <span className="cal-closed">휴무</span>}
             </button>
           );
         })}

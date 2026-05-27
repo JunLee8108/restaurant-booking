@@ -310,22 +310,6 @@
   border-color: transparent;
   color: var(--muted-2);
 }
-.cal-cell.is-closed .cal-day {
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
-  text-decoration-color: var(--muted-2);
-}
-.cal-closed {
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  transform: translateX(-50%);
-  font-family: var(--sans);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: var(--muted-2);
-  pointer-events: none;
-}
 .cal-cell.is-today:not(.is-disabled) {
   border-color: var(--gold-soft);
 }
