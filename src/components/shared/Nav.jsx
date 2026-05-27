@@ -42,6 +42,9 @@ export default function Nav() {
           <a href="/#visit" onClick={() => setOpen(false)}>
             방문 안내
           </a>
+          <Link to="/lookup" onClick={() => setOpen(false)}>
+            예약 조회
+          </Link>
           <Link to="/reserve" className="nav-cta" onClick={() => setOpen(false)}>
             예약하기
           </Link>
