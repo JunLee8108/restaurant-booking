@@ -2,10 +2,10 @@ import { supabase, isSupabaseConfigured } from "./supabase";
 
 /**
  * 영업 정책
- * - 휴무 없음
+ * - 운영일: 토·일요일만 (0=일, 6=토)
  * - 인원: 성인 + 소인 ≤ 15 (유아 36개월 미만 무료, 소인 13세 미만)
  */
-export const CLOSED_DAYS = [];
+export const OPEN_DAYS = [0, 6];
 export const MAX_PARTY = 15;
 
 export const DEFAULT_PRICING = {
@@ -33,7 +33,7 @@ export function generateConfirmationCode() {
 }
 
 export function isClosed(date) {
-  return CLOSED_DAYS.includes(new Date(date).getDay());
+  return !OPEN_DAYS.includes(new Date(date).getDay());
 }
 
 /* ---- 가격 ---- */
