@@ -9,6 +9,7 @@ import {
 import { getSession, onAuthChange, signOut } from "../../lib/auth";
 import { isSupabaseConfigured } from "../../lib/supabase";
 import { useNoIndex } from "../../lib/useNoIndex";
+import PageLoader from "../../components/ui/PageLoader";
 import "./admin.css";
 
 export default function AdminLayout() {
@@ -35,7 +36,7 @@ export default function AdminLayout() {
   }, [pathname]);
 
   if (session === undefined) {
-    return <div className="admin-boot">불러오는 중…</div>;
+    return <PageLoader label="Concierge" />;
   }
   if (!session) return null;
 

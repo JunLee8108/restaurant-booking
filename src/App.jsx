@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 
 import Home from "./routes/public/Home";
 import Reserve from "./routes/public/Reserve";
+import PageLoader from "./components/ui/PageLoader";
 import "./components/ui/ui.css";
 
 const QrCode = lazy(() => import("./routes/public/QrCode"));
@@ -39,7 +40,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollAndHashHandler />
-      <Suspense fallback={<div className="admin-boot">불러오는 중…</div>}>
+      <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/reserve" element={<Reserve />} />

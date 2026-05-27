@@ -103,18 +103,6 @@
   background: var(--bone);
   min-width: 0;
 }
-.admin-boot {
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  font-family: var(--sans);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 12px;
-}
-
 @media (max-width: 900px) {
   .admin-shell {
     grid-template-columns: 1fr;
