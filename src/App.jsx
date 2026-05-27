@@ -6,6 +6,7 @@ import Reserve from "./routes/public/Reserve";
 import "./components/ui/ui.css";
 
 const QrCode = lazy(() => import("./routes/public/QrCode"));
+const Terms = lazy(() => import("./routes/public/Terms"));
 
 const AdminLayout = lazy(() => import("./routes/admin/AdminLayout"));
 const Login = lazy(() => import("./routes/admin/Login"));
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/reserve" element={<Reserve />} />
           <Route path="/qr" element={<QrCode />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
