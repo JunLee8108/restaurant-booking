@@ -123,6 +123,7 @@ export default function Sidebar({ selectedDate }) {
       <Reveal delay={460} className="side-block">
         <div className="eyebrow">예약 정책</div>
         <ul className="side-list">
+          <li>토·일요일에만 운영합니다.</li>
           <li>예약은 매월 1일 다음 달까지 오픈됩니다.</li>
           <li>변경 및 취소는 방문 24시간 전까지 가능합니다.</li>
           <li>드레스 코드: 스마트 캐주얼.</li>
