@@ -31,7 +31,7 @@ export default function Nav() {
 
         <nav className={`nav-links ${open ? "open" : ""}`} aria-label="주요">
           <Link to="/" onClick={() => setOpen(false)}>
-            홈
+            La Stella
           </Link>
           <Link to="/lookup" onClick={() => setOpen(false)}>
             예약 조회
