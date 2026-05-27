@@ -30,18 +30,9 @@ export default function Nav() {
         </Link>
 
         <nav className={`nav-links ${open ? "open" : ""}`} aria-label="주요">
-          <a href="/#story" onClick={() => setOpen(false)}>
-            철학
-          </a>
-          <a href="/#experience" onClick={() => setOpen(false)}>
-            경험
-          </a>
-          <a href="/#atelier" onClick={() => setOpen(false)}>
-            갤러리
-          </a>
-          <a href="/#visit" onClick={() => setOpen(false)}>
-            방문 안내
-          </a>
+          <Link to="/" onClick={() => setOpen(false)}>
+            홈
+          </Link>
           <Link to="/lookup" onClick={() => setOpen(false)}>
             예약 조회
           </Link>
