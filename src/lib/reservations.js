@@ -131,6 +131,8 @@ export async function createReservation(payload) {
     infants,
     party_size: adults + children,
     special_requests: payload.special_requests ?? null,
+    privacy_consent: true,
+    consent_at: new Date().toISOString(),
     confirmation_code,
     status: "pending",
   };

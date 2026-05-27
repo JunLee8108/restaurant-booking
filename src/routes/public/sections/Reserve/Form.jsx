@@ -34,6 +34,7 @@ export default function Reservation({ date, onDateChange }) {
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
+  const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const shellRef = useRef(null);
@@ -116,6 +117,7 @@ export default function Reservation({ date, onDateChange }) {
     setAdults(2);
     setChildren(0);
     setInfants(0);
+    setAgreed(false);
     setResult(null);
     reset();
   };
@@ -190,6 +192,8 @@ export default function Reservation({ date, onDateChange }) {
             childrenCount={children}
             infants={infants}
             values={getValues()}
+            agreed={agreed}
+            onAgreedChange={setAgreed}
             error={result?.message}
           />
         )}
@@ -218,9 +222,9 @@ export default function Reservation({ date, onDateChange }) {
             type="button"
             className="btn solid"
             onClick={handleSubmit(onConfirm)}
-            disabled={submitting}
+            disabled={submitting || !agreed}
           >
-            {submitting ? "처리 중…" : "예약 확정하기"}
+            {submitting ? "처리 중…" : "동의하고 예약 신청하기"}
           </button>
         )}
       </div>
@@ -392,7 +396,16 @@ function DetailsStep({ register, errors }) {
   );
 }
 
-function ConfirmStep({ date, adults, childrenCount, infants, values, error }) {
+function ConfirmStep({
+  date,
+  adults,
+  childrenCount,
+  infants,
+  values,
+  agreed,
+  onAgreedChange,
+  error,
+}) {
   return (
     <div className="step-pane">
       <div className="step-head">
@@ -418,6 +431,29 @@ function ConfirmStep({ date, adults, childrenCount, infants, values, error }) {
       <p className="confirm-fine">
         ※ 예약 확정 후 변경/취소는 방문 24시간 전까지 가능합니다.
       </p>
+
+      <label className={`consent ${agreed ? "checked" : ""}`}>
+        <input
+          type="checkbox"
+          className="consent-box"
+          checked={agreed}
+          onChange={(e) => onAgreedChange(e.target.checked)}
+        />
+        <span className="consent-check" aria-hidden />
+        <span className="consent-text">
+          예약 서비스 약관 및 개인정보 수집·이용, 제3자 제공에 동의합니다.{" "}
+          <a
+            href="/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="consent-link"
+            onClick={(e) => e.stopPropagation()}
+          >
+            약관 전체보기
+          </a>
+        </span>
+      </label>
+
       {error && (
         <div className="field-error" role="alert">
           {error}

@@ -90,6 +90,14 @@ export default function ReservationDetail() {
           <DRow label="전화" value={r.phone} />
           <DRow label="요청" value={r.special_requests || "—"} multiline />
           <DRow
+            label="개인정보 동의"
+            value={
+              r.privacy_consent
+                ? `동의 · ${r.consent_at ? fmtDate(r.consent_at) : "—"}`
+                : "미동의"
+            }
+          />
+          <DRow
             label="접수일"
             value={r.created_at ? fmtDate(r.created_at) : "—"}
           />
