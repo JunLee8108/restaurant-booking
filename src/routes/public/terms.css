@@ -21,10 +21,6 @@
   line-height: 1.1;
   margin: 10px 0 20px;
 }
-.terms-title .italic {
-  color: var(--gold-deep);
-  font-style: italic;
-}
 .terms-lead {
   font-family: var(--serif-ko);
   font-size: 15px;

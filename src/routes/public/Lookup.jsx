@@ -37,9 +37,7 @@ export default function Lookup() {
         <div className="container lookup-wrap">
           <header className="lookup-head">
             <div className="side-mark">★ ★ ★</div>
-            <h1 className="lookup-title">
-              예약 <span className="italic">조회</span>
-            </h1>
+            <h1 className="lookup-title">예약 조회</h1>
             <p className="lookup-lead">
               예약번호와 전화번호로 예약 내용을 확인하실 수 있습니다.
             </p>

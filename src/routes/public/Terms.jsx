@@ -10,9 +10,7 @@ export default function Terms() {
         <div className="container terms-wrap">
           <header className="terms-head">
             <div className="eyebrow">Terms &amp; Privacy</div>
-            <h1 className="terms-title">
-              약관 및 <span className="italic">개인정보 처리방침</span>
-            </h1>
+            <h1 className="terms-title">약관 및 개인정보 처리방침</h1>
             <p className="terms-lead">
               La Stella 예약 서비스 이용을 위한 약관과 개인정보 수집·이용 및 제3자
               제공에 관한 안내입니다.
