@@ -200,6 +200,8 @@ export default function Reservation({ date, onDateChange }) {
             children={children}
             infants={infants}
             customerType={customerType}
+            pricing={pricing}
+            date={date}
             setAdults={setAdults}
             setChildren={setChildren}
             setInfants={setInfants}
@@ -272,6 +274,48 @@ function customerTypeLabel(value) {
   return CUSTOMER_TYPES.find((t) => t.value === value)?.label ?? "일반";
 }
 
+/** 선택 인원 기준 금액 내역 + 합계 (현장 결제) */
+function PartyTotal({ pricing, customerType, date, adults, children }) {
+  const { tier, perAdult, perChild } = computeBuffetPrice(
+    pricing,
+    customerType,
+    date,
+  );
+  const total = adults * perAdult + children * perChild;
+  const tierLabel =
+    tier === "early" ? "사전예약가" : customerTypeLabel(customerType);
+
+  return (
+    <div className="party-total">
+      <div className="party-total-tag">적용 단가 · {tierLabel}</div>
+      <div className="party-total-lines">
+        {adults > 0 && (
+          <div className="party-total-line">
+            <span>
+              성인 {adults} × {won(perAdult)}
+            </span>
+            <span>{won(adults * perAdult)}</span>
+          </div>
+        )}
+        {children > 0 && (
+          <div className="party-total-line">
+            <span>
+              미취학아동 {children} × {won(perChild)}
+            </span>
+            <span>{won(children * perChild)}</span>
+          </div>
+        )}
+      </div>
+      <div className="party-total-sum">
+        <span>합계</span>
+        <span className="party-total-amt">
+          {won(total)} <span className="party-total-note">· 현장 결제</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /* ---- Steps ---- */
 
 function DateStep({ maxDate, value, onChange }) {
@@ -299,6 +343,8 @@ function PartyStep({
   children,
   infants,
   customerType,
+  pricing,
+  date,
   setAdults,
   setChildren,
   setInfants,
@@ -312,9 +358,6 @@ function PartyStep({
       <div className="step-head">
         <div className="eyebrow">Step 02</div>
         <h3>몇 분이 방문하시나요?</h3>
-        <p className="step-hint">
-          성인 · 미취학아동 합산 최대 {MAX_PARTY}명 · 유아는 무료
-        </p>
       </div>
 
       <div className="party-type">
@@ -369,6 +412,14 @@ function PartyStep({
           성인 · 미취학아동 합산이 최대 {MAX_PARTY}명을 초과했습니다.
         </div>
       )}
+
+      <PartyTotal
+        pricing={pricing}
+        customerType={customerType}
+        date={date}
+        adults={adults}
+        children={children}
+      />
     </div>
   );
 }
@@ -464,14 +515,6 @@ function ConfirmStep({
   onAgreedChange,
   error,
 }) {
-  const { tier, perAdult, perChild } = computeBuffetPrice(
-    pricing,
-    customerType,
-    date,
-  );
-  const estimate = adults * perAdult + childrenCount * perChild;
-  const tierLabel = tier === "early" ? "사전예약가" : customerTypeLabel(customerType);
-
   return (
     <div className="step-pane">
       <div className="step-head">
@@ -489,16 +532,21 @@ function ConfirmStep({
             infants,
           })}
         />
-        <Row
-          label={`예상 금액 (${tierLabel})`}
-          value={`${won(estimate)} · 현장 결제`}
-        />
         <Row label="예약자" value={values.customer_name || "—"} />
         <Row label="전화번호" value={values.phone || "—"} />
         {values.special_requests && (
           <Row label="요청" value={values.special_requests} />
         )}
       </div>
+
+      <PartyTotal
+        pricing={pricing}
+        customerType={customerType}
+        date={date}
+        adults={adults}
+        children={childrenCount}
+      />
+
       <p className="confirm-fine">
         ※ 예상 금액은 현재 단가 기준이며, 유아는 무료입니다. 변경/취소는 방문
         24시간 전까지 가능합니다.
