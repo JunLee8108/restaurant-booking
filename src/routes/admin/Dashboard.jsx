@@ -4,6 +4,14 @@ import { listReservations, STATUS_META } from "../../lib/reservations";
 import { fmtDate, toISO } from "../../lib/utils";
 import "./admin.css";
 
+const VOID_STATUSES = ["cancelled", "no_show"];
+const won = (n) => `₩${Number(n || 0).toLocaleString("ko-KR")}`;
+const sumAmount = (list) =>
+  list.reduce(
+    (s, r) => (VOID_STATUSES.includes(r.status) ? s : s + (r.total_amount || 0)),
+    0,
+  );
+
 export default function Dashboard() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,14 +35,13 @@ export default function Dashboard() {
     const pending = rows.filter((r) => r.status === "pending");
     const todayGuests = todays.reduce(
       (sum, r) =>
-        ["cancelled", "no_show"].includes(r.status)
-          ? sum
-          : sum + (r.party_size || 0),
+        VOID_STATUSES.includes(r.status) ? sum : sum + (r.party_size || 0),
       0,
     );
     return {
       todayCount: todays.length,
       todayGuests,
+      todayRevenue: sumAmount(todays),
       upcoming: upcoming.length,
       pending: pending.length,
     };
@@ -55,6 +62,7 @@ export default function Dashboard() {
       <section className="stat-grid">
         <Stat label="오늘 예약" value={stats.todayCount} suffix="건" />
         <Stat label="오늘 게스트" value={stats.todayGuests} suffix="명" />
+        <Stat label="오늘 매출" value={won(stats.todayRevenue)} money />
         <Stat label="다가오는 예약" value={stats.upcoming} suffix="건" />
         <Stat
           label="확정 대기"
@@ -83,6 +91,7 @@ export default function Dashboard() {
                 <th>예약자</th>
                 <th>인원</th>
                 <th>전화</th>
+                <th>금액</th>
                 <th>상태</th>
                 <th />
               </tr>
@@ -98,6 +107,13 @@ export default function Dashboard() {
                   </td>
                   <td className="td-party">{partySummary(r)}</td>
                   <td className="td-seating mono small">{r.phone || "—"}</td>
+                  <td
+                    className={`td-amount mono small ${
+                      VOID_STATUSES.includes(r.status) ? "void" : ""
+                    }`}
+                  >
+                    {won(r.total_amount)}
+                  </td>
                   <td className="td-status">
                     <span className={`badge ${STATUS_META[r.status].tone}`}>
                       {STATUS_META[r.status].label}
@@ -121,13 +137,13 @@ export default function Dashboard() {
   );
 }
 
-function Stat({ label, value, suffix, accent }) {
+function Stat({ label, value, suffix, accent, money }) {
   return (
     <div className={`stat ${accent ? "accent" : ""}`}>
       <div className="stat-label">{label}</div>
-      <div className="stat-value">
+      <div className={`stat-value ${money ? "money" : ""}`}>
         {value}
-        <span className="stat-suffix">{suffix}</span>
+        {suffix && <span className="stat-suffix">{suffix}</span>}
       </div>
     </div>
   );

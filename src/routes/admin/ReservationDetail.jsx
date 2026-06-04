@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import {
-  DEFAULT_PRICING,
   STATUS_META,
-  computeBuffetPrice,
-  getPricing,
   getReservation,
   updateReservation,
 } from "../../lib/reservations";
@@ -24,7 +21,6 @@ const TERMINAL = ["cancelled", "no_show"];
 export default function ReservationDetail() {
   const { id } = useParams();
   const [r, setR] = useState(null);
-  const [pricing, setPricing] = useState(DEFAULT_PRICING);
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -36,10 +32,6 @@ export default function ReservationDetail() {
       setLoading(false);
     });
   }, [id]);
-
-  useEffect(() => {
-    getPricing().then(setPricing);
-  }, []);
 
   const saveStatus = async (status) => {
     setSaving(true);
@@ -72,15 +64,11 @@ export default function ReservationDetail() {
 
   const adults = r.adults ?? 0;
   const children = r.children ?? 0;
-  // 사전예약/현장 시점은 예약 당시(접수일) 기준으로 고정
-  const bookedAt = r.created_at ? new Date(r.created_at) : new Date();
-  const { tier, perAdult, perChild } = computeBuffetPrice(
-    pricing,
-    r.customer_type,
-    r.reservation_date,
-    bookedAt,
-  );
-  const total = adults * perAdult + children * perChild;
+  // 예약 시점에 고정 저장된 단가 스냅샷
+  const tier = r.price_tier;
+  const perAdult = r.price_adult ?? 0;
+  const perChild = r.price_child ?? 0;
+  const total = r.total_amount ?? 0;
 
   return (
     <div className="page">
