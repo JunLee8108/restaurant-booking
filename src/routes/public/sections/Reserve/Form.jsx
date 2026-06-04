@@ -548,9 +548,9 @@ function ConfirmStep({
       />
 
       <p className="confirm-fine">
-        ※ 예상 금액은 현재 단가 기준이며, 유아는 무료입니다. 변경/취소는 방문
-        24시간 전까지 가능합니다.
+        ※ 예상 금액은 현재 단가 기준이며, 유아는 무료입니다.
       </p>
+      <p className="confirm-fine">변경/취소는 방문 24시간 전까지 가능합니다.</p>
 
       <label className={`consent ${agreed ? "checked" : ""}`}>
         <input
