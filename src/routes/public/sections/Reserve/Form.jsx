@@ -159,15 +159,17 @@ export default function Reservation({ date, onDateChange }) {
                 저장되었습니다.
               </div>
             )}
-            <button className="btn gold" onClick={restart}>
-              새 예약 만들기
-            </button>
-            <a
-              className="confirm-lookup"
-              href={`/lookup?code=${encodeURIComponent(result.code)}`}
-            >
-              내 예약 조회하기
-            </a>
+            <div className="confirm-actions">
+              <button className="btn gold" onClick={restart}>
+                새 예약 만들기
+              </button>
+              <a
+                className="confirm-lookup"
+                href={`/lookup?code=${encodeURIComponent(result.code)}`}
+              >
+                내 예약 조회하기
+              </a>
+            </div>
           </div>
         </Reveal>
       </div>
