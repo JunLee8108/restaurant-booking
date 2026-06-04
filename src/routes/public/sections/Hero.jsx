@@ -32,7 +32,7 @@ export default function Hero() {
         <p className="hero-sub">
           계절의 정수에 바치는 헌사
           <br />
-          이탈리아 미식의 조용한 우아함
+          건강한 먹거리의 조용한 우아함
         </p>
         <div className="hero-meta">
           <span>Uijeongbu</span>

@@ -63,9 +63,15 @@ export default function Lookup() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
-              <div className="field-hint">'-' 를 제외하고 숫자만 입력해주세요.</div>
+              <div className="field-hint">
+                '-' 를 제외하고 숫자만 입력해주세요.
+              </div>
             </div>
-            <button className="btn solid lookup-submit" type="submit" disabled={loading}>
+            <button
+              className="btn solid lookup-submit"
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "조회 중…" : "예약 조회"}
             </button>
           </form>
@@ -116,7 +122,8 @@ function ResultCard({ r }) {
 
       <p className="lookup-fine">
         예약 변경 또는 취소를 원하시면{" "}
-        <a href="tel:+82215881234">02 1588 1234</a> 로 전화 주시기 바랍니다.
+        <a href="tel:+82215881234">031-894-0340, 0341</a> 로 전화 주시기
+        바랍니다.
       </p>
     </section>
   );

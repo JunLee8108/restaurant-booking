@@ -30,7 +30,8 @@ export default function Visit() {
               <div className="visit-row">
                 <div className="eyebrow">주소</div>
                 <p>
-                  경기도 의정부시 장곡로 22 (장암동)<br />
+                  경기도 의정부시 장곡로 22 (장암동)
+                  <br />
                   아일랜드 캐슬 리조트 건물 2F
                 </p>
               </div>
@@ -45,7 +46,7 @@ export default function Visit() {
               <div className="visit-row">
                 <div className="eyebrow">예약 문의</div>
                 <p>
-                  <a href="tel:+82215881234">02 1588 1234</a>
+                  <a href="tel:+82215881234">031-894-0340, 0341</a>
                   <br />
                   <a href="mailto:reserve@lastella.kr">reserve@lastella.kr</a>
                 </p>

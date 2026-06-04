@@ -14,12 +14,16 @@ export default function Footer() {
         <div className="footer-cols">
           <div>
             <div className="eyebrow on-dark">방문</div>
-            <p>경기도 의정부시 장곡로 22 (장암동)<br />아일랜드 캐슬 리조트 2F</p>
+            <p>
+              경기도 의정부시 장곡로 22 (장암동)
+              <br />
+              아일랜드 캐슬 리조트 2F
+            </p>
           </div>
           <div>
             <div className="eyebrow on-dark">문의</div>
             <p>
-              <a href="tel:+82215881234">02 1588 1234</a>
+              <a href="tel:+82215881234">031-894-0340, 0341</a>
               <br />
               <a href="mailto:reserve@lastella.kr">reserve@lastella.kr</a>
             </p>
@@ -35,14 +39,20 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} La Stella. All rights reserved.</span>
+          <span>
+            © {new Date().getFullYear()} La Stella. All rights reserved.
+          </span>
           <div className="footer-bottom-right">
             <span>Crafted with reverence for seasonal Italian artistry.</span>
-            <span className="footer-dot" aria-hidden>·</span>
+            <span className="footer-dot" aria-hidden>
+              ·
+            </span>
             <Link to="/lookup" className="footer-admin-link">
               예약 조회
             </Link>
-            <span className="footer-dot" aria-hidden>·</span>
+            <span className="footer-dot" aria-hidden>
+              ·
+            </span>
             <Link to="/admin" className="footer-admin-link">
               관리자
             </Link>

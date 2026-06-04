@@ -12,8 +12,8 @@ export default function Terms() {
             <div className="eyebrow">Terms &amp; Privacy</div>
             <h1 className="terms-title">약관 및 개인정보 처리방침</h1>
             <p className="terms-lead">
-              La Stella 예약 서비스 이용을 위한 약관과 개인정보 수집·이용 및 제3자
-              제공에 관한 안내입니다.
+              La Stella 예약 서비스 이용을 위한 약관과 개인정보 수집·이용 및
+              제3자 제공에 관한 안내입니다.
             </p>
           </header>
 
@@ -49,11 +49,16 @@ export default function Terms() {
               <tbody>
                 <tr>
                   <th>수집 항목</th>
-                  <td>예약자 성명, 휴대전화 번호, 예약 정보(방문일·인원), 요청 사항</td>
+                  <td>
+                    예약자 성명, 휴대전화 번호, 예약 정보(방문일·인원), 요청
+                    사항
+                  </td>
                 </tr>
                 <tr>
                   <th>수집 목적</th>
-                  <td>예약 확인 및 확정 연락, 예약 변경·취소 응대, 방문 관리</td>
+                  <td>
+                    예약 확인 및 확정 연락, 예약 변경·취소 응대, 방문 관리
+                  </td>
                 </tr>
                 <tr>
                   <th>보유·이용 기간</th>
@@ -104,12 +109,12 @@ export default function Terms() {
               개인정보 처리 및 약관에 관한 문의는 아래로 연락 주시기 바랍니다.
             </p>
             <p className="terms-p">
-              La Stella · <a href="tel:+82215881234">02 1588 1234</a> ·{" "}
+              La Stella · <a href="tel:+82215881234">031-894-0340, 0341</a> ·{" "}
               <a href="mailto:reserve@lastella.kr">reserve@lastella.kr</a>
             </p>
             <p className="terms-fine">
-              본 방침의 구체적 내용(상호·연락처·위탁사 등)은 레스토랑 운영 정책에
-              따라 변경될 수 있습니다.
+              본 방침의 구체적 내용(상호·연락처·위탁사 등)은 레스토랑 운영
+              정책에 따라 변경될 수 있습니다.
             </p>
           </section>
         </div>
