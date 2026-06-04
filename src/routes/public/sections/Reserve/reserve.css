@@ -563,9 +563,10 @@
 }
 .confirm-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  gap: 24px;
   margin-top: 32px;
 }
 .confirm-lookup {
@@ -584,4 +585,8 @@
 }
 @media (max-width: 600px) {
   .confirm-card { padding: 40px 24px; }
+  .confirm-actions {
+    flex-direction: column;
+    gap: 40px;
+  }
 }
