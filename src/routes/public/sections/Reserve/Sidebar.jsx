@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Reveal from "../../../../components/ui/Reveal";
 import {
   DEFAULT_PRICING,
+  LAST_ENTRY_LABEL,
+  OPEN_HOURS_LABEL,
   computeBuffetPrice,
   getPricing,
 } from "../../../../lib/reservations";
@@ -117,6 +119,14 @@ export default function Sidebar({ selectedDate }) {
           <li>성인 · 미취학아동 합산 최대 15명까지 예약 가능합니다.</li>
           <li>소인은 성인 요금으로 적용됩니다.</li>
           <li>유아는 인원에 산입되지 않으며 무료입니다.</li>
+        </ul>
+      </Reveal>
+
+      <Reveal delay={420} className="side-block">
+        <div className="eyebrow">운영 시간</div>
+        <ul className="side-list">
+          <li>토·일요일 {OPEN_HOURS_LABEL}</li>
+          <li>입장 마감 {LAST_ENTRY_LABEL}</li>
         </ul>
       </Reveal>
 

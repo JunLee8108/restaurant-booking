@@ -37,14 +37,9 @@ export default function Visit() {
               <div className="visit-row">
                 <div className="eyebrow">영업 시간</div>
                 <p>
-                  <strong className="visit-meal">조식</strong>
-                  매일 07:00 – 10:00 · American Buffet
+                  토·일요일 17:00 – 20:00
                   <br />
-                  <strong className="visit-meal">중식</strong>
-                  사전 단체 예약 시 운영
-                  <br />
-                  <strong className="visit-meal">저녁</strong>
-                  매일 18:00 – 22:00 (마지막 입장 21:30)
+                  입장 마감 19:30
                 </p>
               </div>
               <div className="visit-row">

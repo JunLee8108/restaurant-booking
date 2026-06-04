@@ -8,6 +8,10 @@ import { supabase, isSupabaseConfigured } from "./supabase";
 export const OPEN_DAYS = [0, 6];
 export const MAX_PARTY = 15;
 
+/** 운영 시간 — 토·일 17:00~20:00, 입장 마감 19:30 */
+export const OPEN_HOURS_LABEL = "17:00 – 20:00";
+export const LAST_ENTRY_LABEL = "19:30";
+
 /**
  * 방문 유형 — 예약 시 고객이 선택.
  * - regular: 일반 고객
