@@ -78,10 +78,14 @@ export default function ReservationDetail() {
             value={<code className="conf-code">{r.confirmation_code}</code>}
           />
           <DRow label="날짜" value={fmtDate(r.reservation_date)} />
-          <DRow label="성인" value={`${r.adults ?? 0}명`} />
-          <DRow label="소인" value={`${r.children ?? 0}명`} />
+          <DRow
+            label="방문 유형"
+            value={r.customer_type === "waterpark" ? "워터파크·투숙" : "일반"}
+          />
+          <DRow label="성인 (소인 포함)" value={`${r.adults ?? 0}명`} />
+          <DRow label="미취학아동" value={`${r.children ?? 0}명`} />
           <DRow label="유아 (무료)" value={`${r.infants ?? 0}명`} />
-          <DRow label="합계 (성인+소인)" value={`${r.party_size ?? 0}명`} />
+          <DRow label="합계 (성인+미취학)" value={`${r.party_size ?? 0}명`} />
         </div>
 
         <div className="panel">

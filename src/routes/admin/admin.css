@@ -941,6 +941,31 @@
 }
 
 /* ===== Settings ===== */
+.price-group {
+  margin-bottom: 8px;
+}
+.price-group + .price-group {
+  border-top: 1px solid var(--line-soft);
+  padding-top: 22px;
+}
+.price-group-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 16px;
+}
+.price-group-name {
+  font-family: var(--display);
+  font-size: 19px;
+  color: var(--ink);
+}
+.price-group-hint {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
 .settings-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

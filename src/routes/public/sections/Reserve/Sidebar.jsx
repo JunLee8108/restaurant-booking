@@ -8,6 +8,33 @@ import {
 
 const won = (n) => `₩ ${Number(n).toLocaleString("ko-KR")}`;
 
+function PriceTier({ tag, adult, child, active = false }) {
+  return (
+    <div className={`price-tier ${active ? "active" : ""}`}>
+      <div className="price-tier-head">
+        <span className="tier-tag">{tag}</span>
+        <span
+          className="tier-now"
+          data-visible={active}
+          aria-hidden={!active}
+        >
+          지금 적용
+        </span>
+      </div>
+      <div className="price-tier-rows">
+        <div className="price-tier-line">
+          <span className="tier-who">성인</span>
+          <span className="tier-amt">{won(adult)}</span>
+        </div>
+        <div className="price-tier-line">
+          <span className="tier-who">미취학아동</span>
+          <span className="tier-amt">{won(child)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function formatCutoff(time) {
   if (!time) return "오후 12시";
   const [h] = time.split(":").map(Number);
@@ -32,11 +59,9 @@ export default function Sidebar({ selectedDate }) {
     return () => clearInterval(id);
   }, []);
 
-  const lateDiscounted = Math.round(
-    pricing.price_regular * (1 - pricing.late_discount_pct / 100),
-  );
   const cutoffLabel = formatCutoff(pricing.early_cutoff_time);
-  const currentTier = computeBuffetPrice(pricing, selectedDate, now).tier;
+  const isEarly =
+    computeBuffetPrice(pricing, "regular", selectedDate, now).tier === "early";
 
   return (
     <aside className="reserve-side">
@@ -60,62 +85,43 @@ export default function Sidebar({ selectedDate }) {
       <Reveal delay={300} className="side-block">
         <div className="eyebrow">요금</div>
         <div className="price-stack">
-          <div className="price-original">
-            <span className="strike">{won(pricing.price_regular)}</span>
-            <span className="price-unit"> / 1인</span>
-          </div>
-
           <p className="price-note">
-            예약 시점이 <strong>예약일(방문일)의 {cutoffLabel}</strong> 전이면
-            얼리버드, 이후면 정가에서 {pricing.late_discount_pct}% 할인이
-            적용됩니다.
+            <strong>예약일(방문일)의 {cutoffLabel}</strong> 전에 예약하면
+            사전예약가가, 이후에는 방문 유형에 따른 단가가 적용됩니다. (앞=성인
+            · 뒤=미취학아동, 성인 단가는 소인 포함)
           </p>
 
-          <div
-            className={`price-tier ${currentTier === "early" ? "active" : ""}`}
-          >
-            <div className="price-tier-head">
-              <span className="tier-tag">예약일의 {cutoffLabel} 전 예약</span>
-              <span
-                className="tier-now"
-                data-visible={currentTier === "early"}
-                aria-hidden={currentTier !== "early"}
-              >
-                지금 적용
-              </span>
-            </div>
-            <div className="price-tier-value">
-              {won(pricing.price_early_bird)}
-            </div>
-          </div>
+          <PriceTier
+            tag={`예약일의 ${cutoffLabel} 전 · 사전예약`}
+            adult={pricing.adult_early}
+            child={pricing.child_early}
+            active={isEarly}
+          />
+          <PriceTier
+            tag="일반 (현장시점)"
+            adult={pricing.adult_regular}
+            child={pricing.child_regular}
+            active={!isEarly}
+          />
+          <PriceTier
+            tag="워터파크 입장·투숙"
+            adult={pricing.adult_waterpark}
+            child={pricing.child_waterpark}
+          />
 
-          <div
-            className={`price-tier ${currentTier === "late" ? "active" : ""}`}
-          >
-            <div className="price-tier-head">
-              <span className="tier-tag">
-                예약일의 {cutoffLabel} 이후 예약 ({pricing.late_discount_pct}%
-                할인)
-              </span>
-              <span
-                className="tier-now"
-                data-visible={currentTier === "late"}
-                aria-hidden={currentTier !== "late"}
-              >
-                지금 적용
-              </span>
-            </div>
-            <div className="price-tier-value">{won(lateDiscounted)}</div>
-          </div>
+          <p className="price-note">
+            워터파크·투숙 고객이 사전예약을 하면 둘 중 더 저렴한 사전예약가가
+            적용됩니다.
+          </p>
         </div>
       </Reveal>
 
       <Reveal delay={380} className="side-block">
         <div className="eyebrow">인원</div>
         <ul className="side-list">
-          <li>성인 · 소인 합산 최대 15명까지 예약 가능합니다.</li>
-          <li>소인은 만 13세 미만 어린이입니다.</li>
-          <li>유아(36개월 미만)는 인원에 산입되지 않고 무료입니다.</li>
+          <li>성인 · 미취학아동 합산 최대 15명까지 예약 가능합니다.</li>
+          <li>소인은 성인 요금으로 적용됩니다.</li>
+          <li>유아는 인원에 산입되지 않으며 무료입니다.</li>
         </ul>
       </Reveal>
 
