@@ -8,7 +8,9 @@ import MonthCalendar from "../../../../components/ui/MonthCalendar";
 import {
   CUSTOMER_TYPES,
   DEFAULT_PRICING,
+  LAST_ENTRY_LABEL,
   MAX_PARTY,
+  OPEN_HOURS_LABEL,
   computeBuffetPrice,
   createReservation,
   getPricing,
@@ -159,6 +161,12 @@ export default function Reservation({ date, onDateChange }) {
               <div className="confirm-row">
                 <span>날짜</span>
                 <strong>{fmtDate(result.payload.reservation_date)}</strong>
+              </div>
+              <div className="confirm-row">
+                <span>시간</span>
+                <strong>
+                  {OPEN_HOURS_LABEL} · 입장 마감 {LAST_ENTRY_LABEL}
+                </strong>
               </div>
               <div className="confirm-row">
                 <span>인원</span>

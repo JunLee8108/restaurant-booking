@@ -27,11 +27,9 @@ export default function Footer() {
           <div>
             <div className="eyebrow on-dark">영업 시간</div>
             <p>
-              조식 07:00 – 10:00
+              토·일요일 17:00 – 20:00
               <br />
-              저녁 18:00 – 22:00
-              <br />
-              중식 단체 예약 시
+              입장 마감 19:30
             </p>
           </div>
         </div>
