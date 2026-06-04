@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import {
+  DEFAULT_PRICING,
   STATUS_META,
+  computeBuffetPrice,
+  getPricing,
   getReservation,
   updateReservation,
 } from "../../lib/reservations";
 import { fmtDate } from "../../lib/utils";
 import "./admin.css";
+
+const won = (n) => `₩${Number(n || 0).toLocaleString("ko-KR")}`;
+const TIER_LABEL = {
+  early: "사전예약가",
+  regular: "일반",
+  waterpark: "워터파크·투숙",
+};
 
 const FLOW = ["pending", "confirmed", "seated", "completed"];
 const TERMINAL = ["cancelled", "no_show"];
@@ -14,6 +24,7 @@ const TERMINAL = ["cancelled", "no_show"];
 export default function ReservationDetail() {
   const { id } = useParams();
   const [r, setR] = useState(null);
+  const [pricing, setPricing] = useState(DEFAULT_PRICING);
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -25,6 +36,10 @@ export default function ReservationDetail() {
       setLoading(false);
     });
   }, [id]);
+
+  useEffect(() => {
+    getPricing().then(setPricing);
+  }, []);
 
   const saveStatus = async (status) => {
     setSaving(true);
@@ -55,6 +70,18 @@ export default function ReservationDetail() {
       </div>
     );
 
+  const adults = r.adults ?? 0;
+  const children = r.children ?? 0;
+  // 사전예약/현장 시점은 예약 당시(접수일) 기준으로 고정
+  const bookedAt = r.created_at ? new Date(r.created_at) : new Date();
+  const { tier, perAdult, perChild } = computeBuffetPrice(
+    pricing,
+    r.customer_type,
+    r.reservation_date,
+    bookedAt,
+  );
+  const total = adults * perAdult + children * perChild;
+
   return (
     <div className="page">
       <Link to="/admin/reservations" className="back-link">
@@ -82,10 +109,35 @@ export default function ReservationDetail() {
             label="방문 유형"
             value={r.customer_type === "waterpark" ? "워터파크·투숙" : "일반"}
           />
-          <DRow label="성인 (소인 포함)" value={`${r.adults ?? 0}명`} />
-          <DRow label="미취학아동" value={`${r.children ?? 0}명`} />
+          <DRow label="성인 (소인 포함)" value={`${adults}명`} />
+          <DRow label="미취학아동" value={`${children}명`} />
           <DRow label="유아 (무료)" value={`${r.infants ?? 0}명`} />
           <DRow label="합계 (성인+미취학)" value={`${r.party_size ?? 0}명`} />
+        </div>
+
+        <div className="panel">
+          <h2 className="panel-h">결제 정보</h2>
+          <DRow label="적용 단가" value={TIER_LABEL[tier] ?? "일반"} />
+          {adults > 0 && (
+            <DRow
+              label="성인"
+              value={`${adults} × ${won(perAdult)} = ${won(adults * perAdult)}`}
+            />
+          )}
+          {children > 0 && (
+            <DRow
+              label="미취학아동"
+              value={`${children} × ${won(perChild)} = ${won(children * perChild)}`}
+            />
+          )}
+          <DRow
+            label="결제 예정 금액"
+            value={
+              <strong className="pay-total">
+                {won(total)} <span className="pay-note">· 현장 결제</span>
+              </strong>
+            }
+          />
         </div>
 
         <div className="panel">

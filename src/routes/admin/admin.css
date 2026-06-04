@@ -476,6 +476,19 @@
   line-height: 1.7;
   word-break: break-word;
 }
+.pay-total {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.pay-note {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
 
 /* Status flow */
 .status-row {

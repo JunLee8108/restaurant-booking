@@ -87,8 +87,7 @@ export default function Sidebar({ selectedDate }) {
         <div className="price-stack">
           <p className="price-note">
             <strong>예약일(방문일)의 {cutoffLabel}</strong> 전에 예약하면
-            사전예약가가, 이후에는 방문 유형에 따른 단가가 적용됩니다. (앞=성인
-            · 뒤=미취학아동, 성인 단가는 소인 포함)
+            사전예약가가, 이후에는 방문 유형에 따른 단가가 적용됩니다.
           </p>
 
           <PriceTier
