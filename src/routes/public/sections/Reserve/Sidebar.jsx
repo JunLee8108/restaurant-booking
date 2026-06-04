@@ -98,7 +98,7 @@ export default function Sidebar({ selectedDate }) {
             active={isEarly}
           />
           <PriceTier
-            tag="일반 (현장시점)"
+            tag="일반"
             adult={pricing.adult_regular}
             child={pricing.child_regular}
             active={!isEarly}
