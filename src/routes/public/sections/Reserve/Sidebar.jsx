@@ -13,11 +13,7 @@ function PriceTier({ tag, adult, child, active = false }) {
     <div className={`price-tier ${active ? "active" : ""}`}>
       <div className="price-tier-head">
         <span className="tier-tag">{tag}</span>
-        <span
-          className="tier-now"
-          data-visible={active}
-          aria-hidden={!active}
-        >
+        <span className="tier-now" data-visible={active} aria-hidden={!active}>
           지금 적용
         </span>
       </div>
@@ -79,7 +75,7 @@ export default function Sidebar({ selectedDate }) {
 
       <Reveal delay={220} className="side-block">
         <div className="eyebrow">뷔페</div>
-        <p>제철 식재로 차려내는 성수기 한정 뷔페.</p>
+        <p>제철 식재료로 차려내는 성수기 주말 석식 뷔페.</p>
       </Reveal>
 
       <Reveal delay={300} className="side-block">
