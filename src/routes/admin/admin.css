@@ -310,6 +310,10 @@
   color: var(--muted);
   text-decoration: line-through;
 }
+.td-date {
+  color: var(--ink);
+  white-space: nowrap;
+}
 @media (max-width: 800px) {
   .stat-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -770,8 +774,9 @@
     border: none;
   }
 
-  /* 1행: 시간 + 상태 (우상단 absolute) */
-  .td-time {
+  /* 1행: 시간/날짜 + 상태 (우상단 absolute) */
+  .td-time,
+  .td-date {
     font-family: var(--display);
     font-size: 18px;
     color: var(--ink);

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { listReservations, STATUS_META } from "../../lib/reservations";
-import { fmtDate, toISO } from "../../lib/utils";
+import { fmtDate, fmtDateShort, toISO } from "../../lib/utils";
 import "./admin.css";
 
 const VOID_STATUSES = ["cancelled", "no_show"];
@@ -48,6 +48,23 @@ export default function Dashboard() {
   }, [rows, today]);
 
   const todays = rows.filter((r) => r.reservation_date === today);
+
+  // 오늘 이후(미래) 예약 중 가장 빠른 날짜순 5개 (취소/노쇼 제외)
+  const upcomingList = useMemo(
+    () =>
+      rows
+        .filter(
+          (r) =>
+            r.reservation_date > today && !VOID_STATUSES.includes(r.status),
+        )
+        .sort(
+          (a, b) =>
+            a.reservation_date.localeCompare(b.reservation_date) ||
+            (a.created_at || "").localeCompare(b.created_at || ""),
+        )
+        .slice(0, 5),
+    [rows, today],
+  );
 
   return (
     <div className="page">
@@ -98,42 +115,77 @@ export default function Dashboard() {
             </thead>
             <tbody>
               {todays.map((r) => (
-                <tr key={r.id}>
-                  <td className="td-customer">
-                    <div className="cell-strong">{r.customer_name}</div>
-                    <div className="cell-sub mono small">
-                      {r.confirmation_code}
-                    </div>
-                  </td>
-                  <td className="td-party">{partySummary(r)}</td>
-                  <td className="td-seating mono small">{r.phone || "—"}</td>
-                  <td
-                    className={`td-amount mono small ${
-                      VOID_STATUSES.includes(r.status) ? "void" : ""
-                    }`}
-                  >
-                    {won(r.total_amount)}
-                  </td>
-                  <td className="td-status">
-                    <span className={`badge ${STATUS_META[r.status].tone}`}>
-                      {STATUS_META[r.status].label}
-                    </span>
-                  </td>
-                  <td className="td-action">
-                    <Link
-                      to={`/admin/reservations/${r.id}`}
-                      className="btn ghost sm"
-                    >
-                      상세보기
-                    </Link>
-                  </td>
-                </tr>
+                <ResRow key={r.id} r={r} />
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <section className="panel">
+        <div className="panel-head">
+          <h2>다가오는 예약</h2>
+        </div>
+
+        {loading && <div className="empty">불러오는 중…</div>}
+        {!loading && upcomingList.length === 0 && (
+          <div className="empty">예정된 예약이 없습니다.</div>
+        )}
+        {!loading && upcomingList.length > 0 && (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>날짜</th>
+                <th>예약자</th>
+                <th>인원</th>
+                <th>전화</th>
+                <th>금액</th>
+                <th>상태</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {upcomingList.map((r) => (
+                <ResRow key={r.id} r={r} showDate />
               ))}
             </tbody>
           </table>
         )}
       </section>
     </div>
+  );
+}
+
+function ResRow({ r, showDate }) {
+  return (
+    <tr>
+      {showDate && (
+        <td className="td-date">{fmtDateShort(r.reservation_date)}</td>
+      )}
+      <td className="td-customer">
+        <div className="cell-strong">{r.customer_name}</div>
+        <div className="cell-sub mono small">{r.confirmation_code}</div>
+      </td>
+      <td className="td-party">{partySummary(r)}</td>
+      <td className="td-seating mono small">{r.phone || "—"}</td>
+      <td
+        className={`td-amount mono small ${
+          VOID_STATUSES.includes(r.status) ? "void" : ""
+        }`}
+      >
+        {won(r.total_amount)}
+      </td>
+      <td className="td-status">
+        <span className={`badge ${STATUS_META[r.status].tone}`}>
+          {STATUS_META[r.status].label}
+        </span>
+      </td>
+      <td className="td-action">
+        <Link to={`/admin/reservations/${r.id}`} className="btn ghost sm">
+          상세보기
+        </Link>
+      </td>
+    </tr>
   );
 }
 
