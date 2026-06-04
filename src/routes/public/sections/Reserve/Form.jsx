@@ -275,7 +275,7 @@ function customerTypeLabel(value) {
 }
 
 /** 선택 인원 기준 금액 내역 + 합계 (현장 결제) */
-function PartyTotal({ pricing, customerType, date, adults, children }) {
+function PartyTotal({ pricing, customerType, date, adults, children, className = "" }) {
   const { tier, perAdult, perChild } = computeBuffetPrice(
     pricing,
     customerType,
@@ -286,7 +286,7 @@ function PartyTotal({ pricing, customerType, date, adults, children }) {
     tier === "early" ? "사전예약가" : customerTypeLabel(customerType);
 
   return (
-    <div className="party-total">
+    <div className={`party-total ${className}`.trim()}>
       <div className="party-total-tag">적용 단가 · {tierLabel}</div>
       <div className="party-total-lines">
         {adults > 0 && (
@@ -539,19 +539,6 @@ function ConfirmStep({
         )}
       </div>
 
-      <PartyTotal
-        pricing={pricing}
-        customerType={customerType}
-        date={date}
-        adults={adults}
-        children={childrenCount}
-      />
-
-      <p className="confirm-fine">
-        ※ 예상 금액은 현재 단가 기준이며, 유아는 무료입니다.
-      </p>
-      <p className="confirm-fine">변경/취소는 방문 24시간 전까지 가능합니다.</p>
-
       <label className={`consent ${agreed ? "checked" : ""}`}>
         <input
           type="checkbox"
@@ -573,6 +560,20 @@ function ConfirmStep({
           </a>
         </span>
       </label>
+
+      <PartyTotal
+        className="party-total--confirm"
+        pricing={pricing}
+        customerType={customerType}
+        date={date}
+        adults={adults}
+        children={childrenCount}
+      />
+
+      <p className="confirm-fine">
+        ※ 예상 금액은 현재 단가 기준이며, 유아는 무료입니다.
+      </p>
+      <p className="confirm-fine">변경/취소는 방문 24시간 전까지 가능합니다.</p>
 
       {error && (
         <div className="field-error" role="alert">
