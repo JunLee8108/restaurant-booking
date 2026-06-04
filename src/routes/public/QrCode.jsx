@@ -48,7 +48,7 @@ export default function QrCode() {
       <section className="qr-frame">
         <div className="qr-mark">★ ★ ★</div>
         <h1 className="qr-title">La Stella</h1>
-        <div className="qr-sub">성수기 특선 부페</div>
+        <div className="qr-sub">성수기 특선 뷔페</div>
 
         <div className="qr-rule" />
 

@@ -53,8 +53,8 @@ export default function Sidebar({ selectedDate }) {
       </Reveal>
 
       <Reveal delay={220} className="side-block">
-        <div className="eyebrow">부페</div>
-        <p>제철 식재로 차려내는 성수기 한정 부페.</p>
+        <div className="eyebrow">뷔페</div>
+        <p>제철 식재로 차려내는 성수기 한정 뷔페.</p>
       </Reveal>
 
       <Reveal delay={300} className="side-block">

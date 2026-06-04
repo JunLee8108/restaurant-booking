@@ -56,7 +56,7 @@ export default function Settings() {
       <header className="page-head">
         <div>
           <div className="eyebrow">Settings</div>
-          <h1 className="page-title">부페 요금 설정</h1>
+          <h1 className="page-title">뷔페 요금 설정</h1>
         </div>
       </header>
 
