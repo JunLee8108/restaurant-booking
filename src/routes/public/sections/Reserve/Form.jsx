@@ -6,8 +6,12 @@ import { z } from "zod";
 import Reveal from "../../../../components/ui/Reveal";
 import MonthCalendar from "../../../../components/ui/MonthCalendar";
 import {
+  CUSTOMER_TYPES,
+  DEFAULT_PRICING,
   MAX_PARTY,
+  computeBuffetPrice,
   createReservation,
+  getPricing,
   isClosed,
 } from "../../../../lib/reservations";
 import { fmtDate, toISO } from "../../../../lib/utils";
@@ -34,6 +38,8 @@ export default function Reservation({ date, onDateChange }) {
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
+  const [customerType, setCustomerType] = useState("regular");
+  const [pricing, setPricing] = useState(DEFAULT_PRICING);
   const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
@@ -68,6 +74,10 @@ export default function Reservation({ date, onDateChange }) {
     },
   });
 
+  useEffect(() => {
+    getPricing().then(setPricing);
+  }, []);
+
   const maxDate = useMemo(() => {
     const d = new Date();
     d.setDate(d.getDate() + 45);
@@ -97,6 +107,7 @@ export default function Reservation({ date, onDateChange }) {
       customer_name: values.customer_name.trim(),
       phone: values.phone.trim(),
       reservation_date: toISO(date),
+      customer_type: customerType,
       adults,
       children,
       infants,
@@ -117,6 +128,7 @@ export default function Reservation({ date, onDateChange }) {
     setAdults(2);
     setChildren(0);
     setInfants(0);
+    setCustomerType("regular");
     setAgreed(false);
     setResult(null);
     reset();
@@ -187,9 +199,11 @@ export default function Reservation({ date, onDateChange }) {
             adults={adults}
             children={children}
             infants={infants}
+            customerType={customerType}
             setAdults={setAdults}
             setChildren={setChildren}
             setInfants={setInfants}
+            setCustomerType={setCustomerType}
           />
         )}
         {step === 2 && <DetailsStep register={register} errors={errors} />}
@@ -199,6 +213,8 @@ export default function Reservation({ date, onDateChange }) {
             adults={adults}
             childrenCount={children}
             infants={infants}
+            customerType={customerType}
+            pricing={pricing}
             values={getValues()}
             agreed={agreed}
             onAgreedChange={setAgreed}
@@ -245,9 +261,15 @@ export default function Reservation({ date, onDateChange }) {
 function summarizeParty({ adults, children, infants }) {
   const parts = [];
   if (adults) parts.push(`성인 ${adults}`);
-  if (children) parts.push(`소인 ${children}`);
+  if (children) parts.push(`미취학아동 ${children}`);
   if (infants) parts.push(`유아 ${infants}`);
   return parts.join(" · ") || "—";
+}
+
+const won = (n) => `₩ ${Number(n || 0).toLocaleString("ko-KR")}`;
+
+function customerTypeLabel(value) {
+  return CUSTOMER_TYPES.find((t) => t.value === value)?.label ?? "일반";
 }
 
 /* ---- Steps ---- */
@@ -276,9 +298,11 @@ function PartyStep({
   adults,
   children,
   infants,
+  customerType,
   setAdults,
   setChildren,
   setInfants,
+  setCustomerType,
 }) {
   const partyCount = adults + children;
   const over = partyCount > MAX_PARTY;
@@ -289,21 +313,43 @@ function PartyStep({
         <div className="eyebrow">Step 02</div>
         <h3>몇 분이 방문하시나요?</h3>
         <p className="step-hint">
-          성인 · 소인 합산 최대 {MAX_PARTY}명 · 유아(36개월 미만)는 무료
+          성인 · 미취학아동 합산 최대 {MAX_PARTY}명 · 유아는 무료
         </p>
       </div>
+
+      <div className="party-type">
+        <div className="party-type-label">방문 유형</div>
+        <div className="seg" role="radiogroup" aria-label="방문 유형">
+          {CUSTOMER_TYPES.map((t) => (
+            <button
+              key={t.value}
+              type="button"
+              role="radio"
+              aria-checked={customerType === t.value}
+              className={`seg-btn ${customerType === t.value ? "active" : ""}`}
+              onClick={() => setCustomerType(t.value)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <p className="party-type-hint">
+          워터파크 입장·투숙 고객은 할인 단가가 적용됩니다. (사전예약 시 더 싼
+          값 자동 적용)
+        </p>
+      </div>
+
       <div className="party-stack">
         <Counter
           label="성인"
-          sub="만 13세 이상"
+          sub="소인 포함"
           value={adults}
           min={1}
           max={MAX_PARTY}
           onChange={setAdults}
         />
         <Counter
-          label="소인"
-          sub="만 13세 미만"
+          label="미취학아동"
           value={children}
           min={0}
           max={MAX_PARTY - 1}
@@ -311,7 +357,7 @@ function PartyStep({
         />
         <Counter
           label="유아"
-          sub="36개월 미만 · 무료"
+          sub="무료"
           value={infants}
           min={0}
           max={8}
@@ -320,7 +366,7 @@ function PartyStep({
       </div>
       {over && (
         <div className="party-warn" role="alert">
-          성인 · 소인 합산이 최대 {MAX_PARTY}명을 초과했습니다.
+          성인 · 미취학아동 합산이 최대 {MAX_PARTY}명을 초과했습니다.
         </div>
       )}
     </div>
@@ -334,7 +380,7 @@ function Counter({ label, sub, value, min, max, onChange }) {
     <div className="counter-row">
       <div className="counter-text">
         <div className="counter-label">{label}</div>
-        <div className="counter-sub">{sub}</div>
+        {sub && <div className="counter-sub">{sub}</div>}
       </div>
       <div className="counter-ctrl">
         <button
@@ -411,11 +457,21 @@ function ConfirmStep({
   adults,
   childrenCount,
   infants,
+  customerType,
+  pricing,
   values,
   agreed,
   onAgreedChange,
   error,
 }) {
+  const { tier, perAdult, perChild } = computeBuffetPrice(
+    pricing,
+    customerType,
+    date,
+  );
+  const estimate = adults * perAdult + childrenCount * perChild;
+  const tierLabel = tier === "early" ? "사전예약가" : customerTypeLabel(customerType);
+
   return (
     <div className="step-pane">
       <div className="step-head">
@@ -424,6 +480,7 @@ function ConfirmStep({
       </div>
       <div className="summary">
         <Row label="날짜" value={date ? fmtDate(date) : "—"} />
+        <Row label="방문 유형" value={customerTypeLabel(customerType)} />
         <Row
           label="인원"
           value={summarizeParty({
@@ -432,6 +489,10 @@ function ConfirmStep({
             infants,
           })}
         />
+        <Row
+          label={`예상 금액 (${tierLabel})`}
+          value={`${won(estimate)} · 현장 결제`}
+        />
         <Row label="예약자" value={values.customer_name || "—"} />
         <Row label="전화번호" value={values.phone || "—"} />
         {values.special_requests && (
@@ -439,7 +500,8 @@ function ConfirmStep({
         )}
       </div>
       <p className="confirm-fine">
-        ※ 예약 확정 후 변경/취소는 방문 24시간 전까지 가능합니다.
+        ※ 예상 금액은 현재 단가 기준이며, 유아는 무료입니다. 변경/취소는 방문
+        24시간 전까지 가능합니다.
       </p>
 
       <label className={`consent ${agreed ? "checked" : ""}`}>

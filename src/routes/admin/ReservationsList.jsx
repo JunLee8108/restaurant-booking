@@ -238,7 +238,7 @@ export default function ReservationsList() {
 function partySummary(r) {
   const parts = [];
   if (r.adults) parts.push(`성인 ${r.adults}`);
-  if (r.children) parts.push(`소인 ${r.children}`);
+  if (r.children) parts.push(`미취학 ${r.children}`);
   if (r.infants) parts.push(`유아 ${r.infants}`);
   return parts.join(" · ") || `${r.party_size || 0}명`;
 }
