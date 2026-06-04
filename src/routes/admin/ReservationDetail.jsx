@@ -85,69 +85,6 @@ export default function ReservationDetail() {
         </span>
       </header>
 
-      <section className="detail-grid">
-        <div className="panel">
-          <h2 className="panel-h">예약 정보</h2>
-          <DRow
-            label="예약번호"
-            value={<code className="conf-code">{r.confirmation_code}</code>}
-          />
-          <DRow label="날짜" value={fmtDate(r.reservation_date)} />
-          <DRow
-            label="방문 유형"
-            value={r.customer_type === "waterpark" ? "워터파크·투숙" : "일반"}
-          />
-          <DRow label="성인 (소인 포함)" value={`${adults}명`} />
-          <DRow label="미취학아동" value={`${children}명`} />
-          <DRow label="유아 (무료)" value={`${r.infants ?? 0}명`} />
-          <DRow label="합계 (성인+미취학)" value={`${r.party_size ?? 0}명`} />
-        </div>
-
-        <div className="panel">
-          <h2 className="panel-h">결제 정보</h2>
-          <DRow label="적용 단가" value={TIER_LABEL[tier] ?? "일반"} />
-          {adults > 0 && (
-            <DRow
-              label="성인"
-              value={`${adults} × ${won(perAdult)} = ${won(adults * perAdult)}`}
-            />
-          )}
-          {children > 0 && (
-            <DRow
-              label="미취학아동"
-              value={`${children} × ${won(perChild)} = ${won(children * perChild)}`}
-            />
-          )}
-          <DRow
-            label="결제 예정 금액"
-            value={
-              <strong className="pay-total">
-                {won(total)} <span className="pay-note">· 현장 결제</span>
-              </strong>
-            }
-          />
-        </div>
-
-        <div className="panel">
-          <h2 className="panel-h">고객 정보</h2>
-          <DRow label="이름" value={r.customer_name} />
-          <DRow label="전화" value={r.phone} />
-          <DRow label="요청" value={r.special_requests || "—"} multiline />
-          <DRow
-            label="개인정보 동의"
-            value={
-              r.privacy_consent
-                ? `동의 · ${r.consent_at ? fmtDate(r.consent_at) : "—"}`
-                : "미동의"
-            }
-          />
-          <DRow
-            label="접수일"
-            value={r.created_at ? fmtDate(r.created_at) : "—"}
-          />
-        </div>
-      </section>
-
       <section className="panel">
         <h2 className="panel-h">상태 변경</h2>
         <div className="status-row">
@@ -173,6 +110,69 @@ export default function ReservationDetail() {
             </button>
           ))}
         </div>
+      </section>
+
+      <section className="detail-grid">
+        <div className="panel">
+          <h2 className="panel-h">예약 정보</h2>
+          <DRow
+            label="예약번호"
+            value={<code className="conf-code">{r.confirmation_code}</code>}
+          />
+          <DRow label="날짜" value={fmtDate(r.reservation_date)} />
+          <DRow label="성인 (소인 포함)" value={`${adults}명`} />
+          <DRow label="미취학아동" value={`${children}명`} />
+          <DRow label="유아 (무료)" value={`${r.infants ?? 0}명`} />
+          <DRow label="합계 (성인+미취학)" value={`${r.party_size ?? 0}명`} />
+        </div>
+
+        <div className="panel">
+          <h2 className="panel-h">고객 정보</h2>
+          <DRow label="이름" value={r.customer_name} />
+          <DRow label="전화" value={r.phone} />
+          <DRow
+            label="방문 유형"
+            value={r.customer_type === "waterpark" ? "워터파크·투숙" : "일반"}
+          />
+          <DRow label="요청" value={r.special_requests || "—"} multiline />
+          <DRow
+            label="개인정보 동의"
+            value={
+              r.privacy_consent
+                ? `동의 · ${r.consent_at ? fmtDate(r.consent_at) : "—"}`
+                : "미동의"
+            }
+          />
+          <DRow
+            label="접수일"
+            value={r.created_at ? fmtDate(r.created_at) : "—"}
+          />
+        </div>
+      </section>
+
+      <section className="panel">
+        <h2 className="panel-h">결제 정보</h2>
+        <DRow label="적용 단가" value={TIER_LABEL[tier] ?? "일반"} />
+        {adults > 0 && (
+          <DRow
+            label="성인"
+            value={`${adults} × ${won(perAdult)} = ${won(adults * perAdult)}`}
+          />
+        )}
+        {children > 0 && (
+          <DRow
+            label="미취학아동"
+            value={`${children} × ${won(perChild)} = ${won(children * perChild)}`}
+          />
+        )}
+        <DRow
+          label="결제 예정 금액"
+          value={
+            <strong className="pay-total">
+              {won(total)} <span className="pay-note">· 현장 결제</span>
+            </strong>
+          }
+        />
       </section>
 
       <section className="panel">
