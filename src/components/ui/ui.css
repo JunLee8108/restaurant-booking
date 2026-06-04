@@ -259,10 +259,10 @@
   font-weight: 500;
 }
 .cal-weekday.sun {
-  color: var(--danger);
+  color: #c0392b;
 }
 .cal-weekday.sat {
-  color: #4a6b8a;
+  color: #2d5a8a;
 }
 
 .cal-grid {
@@ -278,7 +278,7 @@
   justify-content: center;
   border: 1px solid transparent;
   background: transparent;
-  color: var(--ink);
+  color: #5a584f;
   cursor: pointer;
   transition:
     border-color var(--t-fast) var(--ease),
@@ -325,14 +325,16 @@
 .cal-cell.is-selected .cal-day {
   color: var(--paper);
 }
-/* Subtle weekend tint for in-month days */
+/* Weekend emphasis for in-month days — deeper color + heavier weight */
 .cal-cell.is-sun:not(.is-other-month):not(.is-disabled):not(.is-selected)
   .cal-day {
-  color: var(--danger);
+  color: #c0392b;
+  font-weight: 500;
 }
 .cal-cell.is-sat:not(.is-other-month):not(.is-disabled):not(.is-selected)
   .cal-day {
-  color: #4a6b8a;
+  color: #2d5a8a;
+  font-weight: 500;
 }
 
 /* ===== Page loader ===== */
