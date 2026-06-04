@@ -256,7 +256,7 @@
 /* ===== Stat grid ===== */
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 40px;
 }
@@ -293,11 +293,22 @@
   align-items: baseline;
   gap: 6px;
 }
+.stat-value.money {
+  font-size: 30px;
+}
 .stat-suffix {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 400;
   color: var(--muted);
+}
+.td-amount {
+  color: var(--ink);
+  white-space: nowrap;
+}
+.td-amount.void {
+  color: var(--muted);
+  text-decoration: line-through;
 }
 @media (max-width: 800px) {
   .stat-grid {
@@ -800,6 +811,13 @@
   }
   .td-code {
     margin-left: 0;
+  }
+
+  /* 금액 — 메타 아래 별도 줄로 강조 */
+  .td-amount {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
   }
 
   /* 액션 */

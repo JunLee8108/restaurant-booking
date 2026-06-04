@@ -21,6 +21,14 @@ const STATUSES = [
 const PAGE_SIZE = 10;
 const GROUP_SIZE = 5;
 
+const VOID_STATUSES = ["cancelled", "no_show"];
+const won = (n) => `₩${Number(n || 0).toLocaleString("ko-KR")}`;
+const sumAmount = (list) =>
+  list.reduce(
+    (s, r) => (VOID_STATUSES.includes(r.status) ? s : s + (r.total_amount || 0)),
+    0,
+  );
+
 export default function ReservationsList() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,6 +88,7 @@ export default function ReservationsList() {
   }, [pageRows]);
 
   const monthLabel = format(viewMonth, "yyyy년 M월", { locale: ko });
+  const monthRevenue = useMemo(() => sumAmount(rows), [rows]);
 
   return (
     <div className="page">
@@ -110,7 +119,9 @@ export default function ReservationsList() {
           </button>
           <div className="month-nav-label">
             {monthLabel}
-            <span className="month-nav-count">{totalCount}건</span>
+            <span className="month-nav-count">
+              {totalCount}건 · {won(monthRevenue)}
+            </span>
           </div>
           <button
             type="button"
@@ -151,7 +162,9 @@ export default function ReservationsList() {
             <div className="panel-head">
               <h2>
                 {fmtDateShort(date)} ·{" "}
-                <span className="muted">{items.length}건</span>
+                <span className="muted">
+                  {items.length}건 · {won(sumAmount(items))}
+                </span>
               </h2>
             </div>
             <table className="table">
@@ -161,6 +174,7 @@ export default function ReservationsList() {
                   <th>인원</th>
                   <th>전화</th>
                   <th>예약 번호</th>
+                  <th>금액</th>
                   <th>상태</th>
                   <th />
                 </tr>
@@ -175,6 +189,13 @@ export default function ReservationsList() {
                     <td className="td-seating mono small">{r.phone || "—"}</td>
                     <td className="td-code mono small">
                       {r.confirmation_code}
+                    </td>
+                    <td
+                      className={`td-amount mono small ${
+                        VOID_STATUSES.includes(r.status) ? "void" : ""
+                      }`}
+                    >
+                      {won(r.total_amount)}
                     </td>
                     <td className="td-status">
                       <span className={`badge ${STATUS_META[r.status].tone}`}>

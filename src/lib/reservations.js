@@ -175,15 +175,31 @@ export async function createReservation(payload) {
   const adults = Number(payload.adults) || 0;
   const children = Number(payload.children) || 0;
   const infants = Number(payload.infants) || 0;
+  const customer_type =
+    payload.customer_type === "waterpark" ? "waterpark" : "regular";
+
+  // 예약 시점 단가 스냅샷 — 이후 단가가 바뀌어도 이 예약 금액은 고정
+  const settings = await getPricing();
+  const { tier, perAdult, perChild } = computeBuffetPrice(
+    settings,
+    customer_type,
+    payload.reservation_date,
+  );
+  const total_amount = adults * perAdult + children * perChild;
+
   const row = {
     customer_name: payload.customer_name,
     phone: payload.phone,
     reservation_date: payload.reservation_date,
-    customer_type: payload.customer_type === "waterpark" ? "waterpark" : "regular",
+    customer_type,
     adults,
     children,
     infants,
     party_size: adults + children,
+    price_tier: tier,
+    price_adult: perAdult,
+    price_child: perChild,
+    total_amount,
     special_requests: payload.special_requests ?? null,
     privacy_consent: true,
     consent_at: new Date().toISOString(),
