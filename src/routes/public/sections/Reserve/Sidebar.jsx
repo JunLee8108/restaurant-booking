@@ -68,7 +68,7 @@ export default function Sidebar({ selectedDate }) {
       </Reveal>
       <Reveal delay={80}>
         <h2 className="side-title">La Stella</h2>
-        <div className="side-sub">Peak Season Buffet</div>
+        <div className="side-sub">성수기 주말 석식 뷔페</div>
       </Reveal>
 
       <Reveal delay={160}>
@@ -76,8 +76,11 @@ export default function Sidebar({ selectedDate }) {
       </Reveal>
 
       <Reveal delay={220} className="side-block">
-        <div className="eyebrow">뷔페</div>
-        <p>제철 식재료로 차려내는 성수기 주말 석식 뷔페.</p>
+        <div className="eyebrow">운영 시간</div>
+        <ul className="side-list">
+          <li>토·일요일 {OPEN_HOURS_LABEL}</li>
+          <li>입장 마감 {LAST_ENTRY_LABEL}</li>
+        </ul>
       </Reveal>
 
       <Reveal delay={300} className="side-block">
@@ -113,7 +116,7 @@ export default function Sidebar({ selectedDate }) {
         </div>
       </Reveal>
 
-      <Reveal delay={380} className="side-block">
+      <Reveal delay={340} className="side-block">
         <div className="eyebrow">인원</div>
         <ul className="side-list">
           <li>성인 · 미취학아동 합산 최대 15명까지 예약 가능합니다.</li>
@@ -122,15 +125,7 @@ export default function Sidebar({ selectedDate }) {
         </ul>
       </Reveal>
 
-      <Reveal delay={420} className="side-block">
-        <div className="eyebrow">운영 시간</div>
-        <ul className="side-list">
-          <li>토·일요일 {OPEN_HOURS_LABEL}</li>
-          <li>입장 마감 {LAST_ENTRY_LABEL}</li>
-        </ul>
-      </Reveal>
-
-      <Reveal delay={460} className="side-block">
+      <Reveal delay={380} className="side-block">
         <div className="eyebrow">예약 정책</div>
         <ul className="side-list">
           <li>토·일요일에만 운영합니다.</li>
@@ -139,7 +134,7 @@ export default function Sidebar({ selectedDate }) {
         </ul>
       </Reveal>
 
-      <Reveal delay={540} className="side-block side-quote">
+      <Reveal delay={420} className="side-block side-quote">
         <p>
           "음식이 아닌, <span className="italic">시간</span>을 대접합니다."
         </p>
